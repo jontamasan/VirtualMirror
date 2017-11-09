@@ -10,10 +10,12 @@ namespace VirtualMirror
 {
     public class VirtualMirror : Mod
     {
+        public const string VERSION = "0.1";
+
         public override string ID => "VirtualMirror";
         public override string Name => "VirtualMirror";
         public override string Author => "PigeonBB";
-        public override string Version => "0.1";
+        public override string Version => VERSION;
 
         //Set this to true if you will be load custom assets from Assets folder.
         //This will create subfolder in Assets folder for your mod.
@@ -21,9 +23,8 @@ namespace VirtualMirror
 
         public Keybind virtualMirrorKey = new Keybind("virtualMirror", "Virtual Mirror", KeyCode.F10);
         public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F12, KeyCode.LeftControl);
-        private GameObject _fpsfpsCamera;
+
         private GameObject _player;
-        private GameObject _CAM_VERTICAL;
         private FsmBool _playerInMenu;
         private bool _guiActive;
 #if DEBUG
@@ -31,13 +32,13 @@ namespace VirtualMirror
 #endif
         Rect rect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
 
-        private GameObject _fpsCamera;
-        private GameObject RIGHTSIDE_Mirror;
-        private GameObject REARVIEW_Mirror;
+        public static GameObject RIGHTSIDE_Cam;
+        public static GameObject REARVIEW_Cam;
+        public static GameObject LEFTSIDE_Cam;
+
+        private  GameObject RIGHTSIDE_Mirror;
+        private  GameObject REARVIEW_Mirror;
         private GameObject LEFTSIDE_Mirror;
-        private GameObject RIGHTSIDE_Cam;
-        public GameObject REARVIEW_Cam;
-        private GameObject LEFTSIDE_Cam;
         private RenderTexture _rightMirrorTargetTexture;
         private RenderTexture _rearviewTargetTexture;
         private RenderTexture _leftMirrorTargetTexture;
@@ -66,15 +67,13 @@ namespace VirtualMirror
         //private int _switchMirrorsValue = 0;
         //private int _farClipPlane = 100;
         private Settings _settings;
-        private GameObject _optionMenu;
         private Vector3 _newPos = Vector3.zero;
-        private bool _buttonPressed;
         private RenderTexture _rightRenderTexture;
         private RenderTexture _leftRenderTexture;
         private bool _rearviewMirrorActive;
         private bool _rightMirrorActive;
         private bool _leftMirrorActive;
-        private Cars _currentCar;
+        public static Cars CurrentCar { get; set; }
 
         private enum SwitchMirrorsNum
         {
@@ -94,7 +93,7 @@ namespace VirtualMirror
             Keybind.Add(this, virtualMirrorKey);
             Keybind.Add(this, toggleMenuKey);
 
-            _settings = CreateData();
+            _settings = CreateData(Version);
             // load settings from file.
             if (File.Exists(Path.Combine(ModLoader.GetModConfigFolder(this), SETTINGS_FILE_NAME)))
             {
@@ -113,7 +112,9 @@ namespace VirtualMirror
         {
             if (_guiActive)
             {
-                rect = GUI.Window(0, rect, DoWindow, "Mirror Mod Option Menu");
+                GUI.backgroundColor = Color.gray;
+                GUI.skin.window.fontStyle = FontStyle.Bold;
+                rect = GUI.Window(0, rect, DoWindow, "MIRROR MOD OPTION MENU");
             }
             else
             {
@@ -123,217 +124,13 @@ namespace VirtualMirror
         }
 
         // Change virtual mirror camera position
-        private void DoWindow(int id)
+        private static void DoWindow(int id)
         {
-            float buttom_width = 40;
-            float area_width = 160;
-            float area_height = 100;
-            float padding = 10;
-            #region Translate
-            #region Left side mirror
-            GUILayout.BeginArea(new Rect(padding, 20, area_width, area_height));
-            {
-                GUILayout.BeginVertical("box");
-                {
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("|", GUILayout.MaxWidth(buttom_width))) // backword
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, -0.025f, 0, 0);
-                        }
-                        if (GUILayout.Button("^", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, 0.025f, 0, Space.World);
-                        }
-                        if (GUILayout.Button("|", GUILayout.MaxWidth(buttom_width))) // forword
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0.025f, 0, 0);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("<", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -0.025f, 0);
-                        }
-                        GUILayout.Button("o", GUILayout.MaxWidth(buttom_width));
-                        if (GUILayout.Button(">", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, 0.025f, 0);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("v", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -0.025f, 0, Space.World);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndArea();
-            #endregion
-            #region Rearview mirror
-            GUILayout.BeginArea(new Rect(area_width + padding, 20, area_width, area_height));
-            {
-                GUILayout.BeginVertical("box");
-                {
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("^", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("<", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.Button("O", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.Button(">", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("v", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndArea();
-            #endregion
-            #region Right side mirror
-            GUILayout.BeginArea(new Rect(area_width * 2 + padding, 20, area_width, area_height));
-            {
-                GUILayout.BeginVertical("box");
-                {
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("^", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("<", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.Button("O", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.Button(">", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Button("v", GUILayout.MaxWidth(buttom_width));
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndArea();
-            #endregion
-            #endregion
-            #region Rotation
-            #region Left side mirror
-            GUILayout.BeginArea(new Rect(padding, area_height + padding, area_width, area_height));
-            {
-                GUILayout.BeginVertical("box");
-                {
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("(", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.forward, -1);
-                        }
-                        if (GUILayout.Button("^", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.right, -1/*, Space.World*/);
-                        }
-                        if (GUILayout.Button(")", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.forward, 1);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("<", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.up, 1, Space.World);
-                        }
-                        if (GUILayout.Button("O", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            var revert = CreateData();
-                            ModConsole.Print("currentCar: " + _currentCar.LeftCam.LocalEulerAngles);
-                            ModConsole.Print("revert: " + revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles);
-                            LEFTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles;
-                            _currentCar.LeftCam.LocalEulerAngles = LEFTSIDE_Cam.transform.localEulerAngles;
-                        }
-                        if (GUILayout.Button(">", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.up, -1, Space.World);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                    GUILayout.BeginHorizontal();
-                    {
-                        GUILayout.FlexibleSpace();
-                        if (GUILayout.Button("v", GUILayout.MaxWidth(buttom_width)))
-                        {
-                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.right, 1/*, Space.World*/);
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    GUILayout.EndHorizontal();
-                }
-                GUILayout.EndVertical();
-            }
-            GUILayout.EndArea();
-            #endregion
-            #endregion
-            GUI.DragWindow();
+            SettingsGUI gui = new SettingsGUI();
+            gui.DoWindow();
         }
 
-        private static Vector3 Rotate(GameObject obj, Vector3 axis, float angle, Space relativeTo = Space.Self)
-        {
-            obj.transform.Rotate(axis, angle, relativeTo);
-            return obj.transform.localEulerAngles;
-        }
 
-        private static Vector3 Translate(GameObject obj, float v1, float v2, float v3, Space relativeTo)
-        {
-            obj.transform.Translate(v1, v2, v3, relativeTo);
-            return obj.transform.localPosition;
-        }
-
-        private static Vector3 Translate(GameObject obj, float v1, float v2, float v3)
-        {
-            obj.transform.Translate(v1, v2, v3, obj.transform.parent);
-            return obj.transform.localPosition;
-        }
 
         /// <summary>
         /// Update is called once per frame
@@ -378,120 +175,120 @@ namespace VirtualMirror
                 switch (cars)
                 {
                     case GIFU:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(_currentCar);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj).transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         _rightRenderTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
                         _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
                         break;
                     case VAN:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(_currentCar);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj).transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         _rightRenderTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
                         _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
                         break;
                     case SATSUMA:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(_currentCar);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/Body/pivot_door_right/door right(Clone)").transform,
-                            cam_settings: _currentCar.RightCam
+                            cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj + "/CarRearMirrorPivot").transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         _rightRenderTexture = _rightMirrorTargetTexture;
                         _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case KEKMET:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(_currentCar);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/DriverDoors 1/doorr/door(right)").transform,
-                            cam_settings: _currentCar.RightCam
+                            cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj).transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         SetCameraPositon(
                             camera: LEFTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/DriverDoors 1/doorl/door(leftx)").transform,
-                            cam_settings: _currentCar.LeftCam
+                            cam_settings: CurrentCar.LeftCam
                             );
                         _rightRenderTexture = _rightMirrorTargetTexture;
                         _leftRenderTexture = _leftMirrorTargetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     case MUSCLE:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(_currentCar);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/DriverDoors/door(right)").transform,
-                            cam_settings: _currentCar.RightCam
+                            cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj).transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         _rightRenderTexture = _rightMirrorTargetTexture;
                         _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
                         //RIGHTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = _rightMirrorTargetTexture;
                         //LEFTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case BOAT:
                         break;
                     case MOPED:
                         break;
                     case RUSCKO:
-                        _currentCar = _settings.Cars.Find(x => x.Name == cars);
+                        CurrentCar = _settings.Cars.Find(x => x.Name == cars);
                         //if (_buttonPressed)
                         //{
                         //    car_list.LeftCam.LocalPosition += _newPos;
                         //    ModConsole.Print("in ruscko: " + car_list.LeftCam.LocalPosition);
                         //    _buttonPressed = false;
                         //}
-                        SwitchMirrors(_currentCar);
+                        SwitchMirrors(CurrentCar);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/DriverDoors/doorr").transform,
-                            cam_settings: _currentCar.RightCam
+                            cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj).transform,
-                            cam_settings: _currentCar.RearviewCam
+                            cam_settings: CurrentCar.RearviewCam
                             );
                         SetCameraPositon(
                             camera: LEFTSIDE_Cam,
                             parent: GameObject.Find(car_obj + "/DriverDoors/doorl").transform,
-                            cam_settings: _currentCar.LeftCam
+                            cam_settings: CurrentCar.LeftCam
                             );
                         //LEFTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = _leftMirrorTargetTexture;
                         //LEFTSIDE_Mirror.SetActive(true);
                         _rightRenderTexture = _rightMirrorTargetTexture; // <- これいる？
                         _leftRenderTexture = _leftMirrorTargetTexture;
-                        SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     default:
 #if DEBUG
@@ -800,12 +597,17 @@ namespace VirtualMirror
             //REARVIEW_Mirror.SetActive(false);
             //LEFTSIDE_Mirror.SetActive(false);
         }
-
-        private Settings CreateData()
+        
+        /// <summary>
+        /// Create default mirror settings
+        /// </summary>
+        /// <param name="version">mod version</param>
+        /// <returns>default settings</returns>
+        public static Settings CreateData(string version)
         {
             Settings settings = new Settings { Cars = new List<Cars>() };
 
-            settings.Version = Version;
+            settings.Version = version;
             settings.FarClipPlane = 100;
             settings.RenderTextureDepth = 16;
             settings.SideMirrorsRenderTextureWidth = 256;
