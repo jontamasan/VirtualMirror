@@ -7,6 +7,7 @@ namespace VirtualMirror
     public class Settings
     {
         public string Version { get; set; }
+        // TODO: Change XmlElement name
         public int FarClipPlane { get; set; }
         public int RenderTextureDepth { get; set; }
         public int SideMirrorsRenderTextureWidth { get; set; }
@@ -34,6 +35,6 @@ namespace VirtualMirror
         public float FieldOfView { get; set; }
         public Vector3 LocalPosition { get; set; }
         public Vector3 LocalEulerAngles { get; set; }
-
+        public Vector3 LocalScalse { get; set; }
     }
 }

@@ -24,7 +24,6 @@ namespace VirtualMirror
         private GameObject _fpsfpsCamera;
         private GameObject _player;
         private GameObject _CAM_VERTICAL;
-        private GameObject _GUI;
         private FsmBool _playerInMenu;
         private bool _guiActive;
 #if DEBUG
@@ -76,8 +75,6 @@ namespace VirtualMirror
         private bool _rightMirrorActive;
         private bool _leftMirrorActive;
         private Cars _currentCar;
-        private GameObject _clockData;
-        private GameObject _TEXT;
 
         private enum SwitchMirrorsNum
         {
@@ -89,7 +86,9 @@ namespace VirtualMirror
             RightLeft
         }
 
-        //Called when mod is loading
+        /// <summary>
+        /// Called when mod is loading
+        /// </summary>
         public override void OnLoad()
         {
             Keybind.Add(this, virtualMirrorKey);
@@ -107,77 +106,24 @@ namespace VirtualMirror
             }
         }
 
-        //----
-        // OnGui
-        //----
+        /// <summary>
+        ///  OnGui
+        /// </summary>
         public override void OnGUI()
         {
-            GUI.Label(new Rect(0, 0, 200, 200), "angles: "+ _GUI.transform.localEulerAngles);
-            GUI.Label(new Rect(0, 20, 200, 200), "scale: " + _GUI.transform.localScale);
-            GUI.Label(new Rect(0, 40, 200, 200), "local pos: " + _GUI.transform.localPosition);
-            //rect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
-            if (_rightMirrorActive)
-            {
-                float height = Screen.height * 1 / 7;
-                float width = height * 1.5f;
-                float padding = 10;
-                //GUI.backgroundColor = Color.clear;
-                GUILayout.BeginArea(new Rect(Screen.width - (width + padding), 0, width + padding, height + padding));
-                GUILayout.BeginVertical("box");
-                GUILayout.FlexibleSpace();
-                GUI.DrawTextureWithTexCoords(
-                    new Rect(padding / 2, padding / 2, width, height),
-                    _rightRenderTexture,
-                    new Rect(1, 0, -1, 1)
-                    );
-                GUILayout.EndVertical();
-                GUILayout.EndArea();
-            }
-            if (_rearviewMirrorActive)
-            {
-                float height = Screen.height * 1 / 7;
-                float width = height * 4f;
-                float padding = 10;
-                //GUI.backgroundColor = Color.clear;
-                GUILayout.BeginArea(new Rect((Screen.width / 2) - (width / 2), 0, width + padding, height + padding));
-                GUILayout.BeginVertical("box");
-                GUILayout.FlexibleSpace();
-                GUI.DrawTextureWithTexCoords(
-                    new Rect(padding / 2, padding / 2, width, height),
-                    _rearviewTargetTexture,
-                    new Rect(1, 0, -1, 1)
-                    );
-                GUILayout.EndVertical();
-                GUILayout.EndArea();
-            }
-            if (_leftMirrorActive)
-            {
-                float height = Screen.height * 1 / 7;
-                float width = height * 1.5f;
-                float padding = 10;
-                //GUI.backgroundColor = Color.clear; 
-                GUILayout.BeginArea(new Rect(0, 0, width + padding, height + padding));
-                GUILayout.BeginVertical("box");
-                GUILayout.FlexibleSpace();
-                GUI.DrawTextureWithTexCoords(
-                    new Rect(padding / 2, padding / 2, width, height),
-                    _leftRenderTexture,
-                    new Rect(1, 0, -1, 1)
-                    );
-                GUILayout.EndVertical();
-                GUILayout.EndArea();
-            }
             if (_guiActive)
             {
                 rect = GUI.Window(0, rect, DoWindow, "Mirror Mod Option Menu");
             }
             else
             {
+                // Reset window position, if GUI is closed.
                 rect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
             }
         }
 
-        void DoWindow(int id)
+        // Change virtual mirror camera position
+        private void DoWindow(int id)
         {
             float buttom_width = 40;
             float area_width = 160;
@@ -194,18 +140,14 @@ namespace VirtualMirror
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("|", GUILayout.MaxWidth(buttom_width))) // backword
                         {
-                            //LEFTSIDE_Cam.transform.Translate(0.025f, 0, 0, LEFTSIDE_Cam.transform.parent);
-                            //_currentCar.LeftCam.LocalPosition = LEFTSIDE_Cam.transform.localPosition;
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, -0.025f, 0, 0);
                         }
                         if (GUILayout.Button("^", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Translate(0, 0.025f, 0, Space.World);
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, 0.025f, 0, Space.World);
                         }
                         if (GUILayout.Button("|", GUILayout.MaxWidth(buttom_width))) // forword
                         {
-                            //LEFTSIDE_Cam.transform.Translate(-0.025f, 0, 0, LEFTSIDE_Cam.transform.parent);
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0.025f, 0, 0);
                         }
                         GUILayout.FlexibleSpace();
@@ -214,15 +156,13 @@ namespace VirtualMirror
                     GUILayout.BeginHorizontal();
                     {
                         GUILayout.FlexibleSpace();
-                        if ( GUILayout.Button("<", GUILayout.MaxWidth(buttom_width)))
+                        if (GUILayout.Button("<", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Translate(0, -0.025f, 0, LEFTSIDE_Cam.transform.parent);
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -0.025f, 0);
                         }
                         GUILayout.Button("o", GUILayout.MaxWidth(buttom_width));
                         if (GUILayout.Button(">", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Translate(0, 0.025f, 0, LEFTSIDE_Cam.transform.parent);
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, 0.025f, 0);
                         }
                         GUILayout.FlexibleSpace();
@@ -233,7 +173,6 @@ namespace VirtualMirror
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("v", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Translate(0, -0.025f, 0, Space.World);
                             _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -0.025f, 0, Space.World);
                         }
                         GUILayout.FlexibleSpace();
@@ -324,18 +263,14 @@ namespace VirtualMirror
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("(", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.forward, -1);
-                            //_currentCar.LeftCam.LocalEulerAngles = LEFTSIDE_Cam.transform.localEulerAngles;
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.forward, -1);
                         }
                         if (GUILayout.Button("^", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.right, -1, Space.World);
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.right, -1/*, Space.World*/);
                         }
                         if (GUILayout.Button(")", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.forward, 1);
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.forward, 1);
                         }
                         GUILayout.FlexibleSpace();
@@ -346,20 +281,18 @@ namespace VirtualMirror
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("<", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.up, 1, Space.World);
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.up, 1, Space.World);
                         }
                         if (GUILayout.Button("O", GUILayout.MaxWidth(buttom_width)))
                         {
                             var revert = CreateData();
-                            ModConsole.Print("currentCar: "+_currentCar.LeftCam.LocalEulerAngles);
-                            ModConsole.Print("revert: "+ revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles);
+                            ModConsole.Print("currentCar: " + _currentCar.LeftCam.LocalEulerAngles);
+                            ModConsole.Print("revert: " + revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles);
                             LEFTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles;
                             _currentCar.LeftCam.LocalEulerAngles = LEFTSIDE_Cam.transform.localEulerAngles;
                         }
                         if (GUILayout.Button(">", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.up, -1, Space.World);
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.up, -1, Space.World);
                         }
                         GUILayout.FlexibleSpace();
@@ -370,7 +303,6 @@ namespace VirtualMirror
                         GUILayout.FlexibleSpace();
                         if (GUILayout.Button("v", GUILayout.MaxWidth(buttom_width)))
                         {
-                            //LEFTSIDE_Cam.transform.Rotate(GameObject.Find(_currentCar.Name).transform.right, 1, Space.World);
                             _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, GameObject.Find(_currentCar.Name).transform.right, 1/*, Space.World*/);
                         }
                         GUILayout.FlexibleSpace();
@@ -403,9 +335,9 @@ namespace VirtualMirror
             return obj.transform.localPosition;
         }
 
-        //----
-        // Update is called once per frame
-        //----
+        /// <summary>
+        /// Update is called once per frame
+        /// </summary>
         public override void Update()
         {
             if (Application.loadedLevelName != "GAME") return;
@@ -435,13 +367,13 @@ namespace VirtualMirror
             var cars = FsmVariables.GlobalVariables.FindFsmString("PlayerCurrentVehicle").Value;
             // activate once if player is boarded a car
             if (cars.Length != 0 && _isPlayerBoarded ||
-                cars.Length != 0 && virtualMirrorKey.IsDown() 
+                cars.Length != 0 && virtualMirrorKey.IsDown()
                 //||
                 //_buttonPressed
                 )
             {
                 //Cars car_list;
-                
+
                 string car_obj = GameObject.Find("PLAYER").transform.root.name; // If Player is driving mode, we can take car object via "PLAYER" root object.
                 switch (cars)
                 {
@@ -556,7 +488,7 @@ namespace VirtualMirror
                             cam_settings: _currentCar.LeftCam
                             );
                         //LEFTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = _leftMirrorTargetTexture;
-                        //LEFTSIDE_Mirror.SetActive(true); 
+                        //LEFTSIDE_Mirror.SetActive(true);
                         _rightRenderTexture = _rightMirrorTargetTexture; // <- これいる？
                         _leftRenderTexture = _leftMirrorTargetTexture;
                         SetActive(_currentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
@@ -611,112 +543,111 @@ namespace VirtualMirror
 
         private bool Initialize()
         {
-            _player = GameObject.Find("PLAYER");
-            //if (!_fpsCamera) return false;
-            if (!_player) return false;
-            _fpsCamera = GameObject.Find("FPSCamera");
-            _fpsfpsCamera = GameObject.Find("FPSCamera/FPSCamera");
-            _CAM_VERTICAL = GameObject.Find("PLAYER/Pivot/Camera/FPSCamera");
-            _playerInMenu = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
-            foreach (var r in Resources.FindObjectsOfTypeAll<GameObject>())
-            {
-                if (r.name == "OptionsMenu")
-                {
-                    _optionMenu = r;
-                    break;
-                }
-            }
-
-            //_CAM_HORIZONTAL = GameObject.Find("PLAYER");
-            //_CAM_VERTICAL = GameObject.Find("PLAYER/Pivot/Camera/FPSCamera");
-
-#if DEBUG
-            test = GameObject.CreatePrimitive(PrimitiveType.Capsule);
-            test.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-            test.transform.localEulerAngles = Vector3.zero;
-            test.GetComponent<Collider>().enabled = false;
-#endif
-            Vector3 sidemirror_scale = new Vector3(0.012f * 1.5f, 0.012f, 0.0001f);
-            Vector3 rearview_scale = new Vector3(0.01f * 4f, 0.01f, 0.0001f);
-            Vector3 local_scale = new Vector3(0.012f * 1.5f, 0.012f, 0.0001f);
-            Vector3 local_position = new Vector3(0f, 0.034f, 0.1f);
-            // right-side mirror for Truck & Van
-            float res = (float)Screen.width / (float)Screen.height;
-            if (Math.Abs(res - (16f / 9f)) < 0.1f)
-            {
-                //ModConsole.Print("16:9");
-                local_position += new Vector3(0.063f, 0);
-            }
-            else if (Math.Abs(res - (16f / 10f)) < 0.1f)
-            {
-                //ModConsole.Print("16:10");
-                local_position += new Vector3(0.056f, 0);
-            }
-            else if (Math.Abs(res - (4f / 3f)) < 0.1f)
-            {
-                //ModConsole.Print("4:3");
-                local_position += new Vector3(0.046f, 0);
-            }
-            else if (Math.Abs(res - (3f / 2f)) < 0.1f)
-            {
-                //ModConsole.Print("3:2");
-                local_position += new Vector3(0.052f, 0);
-            }
-            else
-            {
-                //ModConsole.Print("other");
-                /*RIGHTSIDE_Mirror.transform.localPosition = new Vector3(0.1f, 0.034f, 0.1f);
-                var view_point =  Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
-                while (view_point.x > 0.8f)
-                {
-                    RIGHTSIDE_Mirror.transform.localPosition -= new Vector3(0.05f, 0);
-                    view_point = Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
-                }*/
-                local_position += new Vector3(0.04f, 0);
-            }
-
-            //RIGHTSIDE_Mirror = CreateVirtualMirror("RIGHTSIDE_Mirror", local_position, local_scale);
-            //LEFTSIDE_Mirror = CreateVirtualMirror("LEFTSIDE_Mirror", local_position, local_scale, true);
-
-            _rightMirrorTargetTexture = new RenderTexture(
-                _settings.SideMirrorsRenderTextureWidth,
-                _settings.SideMirrorsRenderTextureHeight,
-                _settings.RenderTextureDepth
-                );
-            RIGHTSIDE_Cam = CreateVitualMirrorCam("RIGHTSIDE_Cam", _rightMirrorTargetTexture);
-
-            _leftMirrorTargetTexture = new RenderTexture(
-                _settings.SideMirrorsRenderTextureWidth,
-                _settings.SideMirrorsRenderTextureHeight,
-                _settings.RenderTextureDepth
-                );
-            LEFTSIDE_Cam = CreateVitualMirrorCam("LEFTSIDE_Cam", _leftMirrorTargetTexture);
-
-            _rearviewTargetTexture = new RenderTexture(
-                _settings.RearviewMirrorsRenderTextureWidth,
-                _settings.RearviewMirrorsRenderTextureHeight,
-                _settings.RenderTextureDepth
-                );
-            REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", _rearviewTargetTexture);
-
-            //local_position = new Vector3(0, 0.035f, 0.1f); // local position on screen
-            //local_scale = new Vector3(0.01f * 4f, 0.01f, 0.0001f);
-            //REARVIEW_Mirror = CreateVirtualMirror("REARVIEW_Mirror", local_position, local_scale);
-            //REARVIEW_Mirror.GetComponent<Renderer>().material.mainTexture = _rearviewTargetTexture;  // Rearview has using always this renderer textrue.
-
             try
             {
-                _GUI = GameObject.Instantiate<GameObject>(GameObject.Find("GUI/HUD/Day"));
-                _clockData = _GUI.transform.Find("BarBG").gameObject;
-                _TEXT = _GUI.transform.Find("Data").gameObject;
-                GameObject.Destroy(_clockData.GetComponent("PlayMakerFSM"));
-                _clockData.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Unlit/Texture"));
-                _clockData.GetComponent<MeshRenderer>().material.mainTexture = _leftMirrorTargetTexture;
-                _TEXT.SetActive(false);
-                _GUI.transform.parent = GameObject.Find("GUI").transform;
-                _GUI.transform.name = "LeftVirtualMirror";
-                _GUI.transform.localPosition = new Vector3(-14f, 8f, 0); // -12でGUIのはじっこ
-                _GUI.transform.localScale = new Vector3(5, 5*2f);
+                _player = GameObject.Find("PLAYER");
+                if (!_player) return false;
+                _playerInMenu = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
+                //_fpsCamera = GameObject.Find("FPSCamera");
+                //_fpsfpsCamera = GameObject.Find("FPSCamera/FPSCamera");
+                //_CAM_VERTICAL = GameObject.Find("PLAYER/Pivot/Camera/FPSCamera");
+                //foreach (var r in Resources.FindObjectsOfTypeAll<GameObject>())
+                //{
+                //    if (r.name == "OptionsMenu")
+                //    {
+                //        _optionMenu = r;
+                //        break;
+                //    }
+                //}
+
+                _rightMirrorTargetTexture = new RenderTexture(
+                    _settings.SideMirrorsRenderTextureWidth,
+                    _settings.SideMirrorsRenderTextureHeight,
+                    _settings.RenderTextureDepth
+                    );
+                RIGHTSIDE_Cam = CreateVitualMirrorCam("RIGHTSIDE_Cam", _rightMirrorTargetTexture);
+
+                _leftMirrorTargetTexture = new RenderTexture(
+                    _settings.SideMirrorsRenderTextureWidth,
+                    _settings.SideMirrorsRenderTextureHeight,
+                    _settings.RenderTextureDepth
+                    );
+                LEFTSIDE_Cam = CreateVitualMirrorCam("LEFTSIDE_Cam", _leftMirrorTargetTexture);
+
+                _rearviewTargetTexture = new RenderTexture(
+                    _settings.RearviewMirrorsRenderTextureWidth,
+                    _settings.RearviewMirrorsRenderTextureHeight,
+                    _settings.RenderTextureDepth
+                    );
+                REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", _rearviewTargetTexture);
+
+                Vector3 rearview_scale = new Vector3(10, 3, 0);
+                Vector3 sidemirror_scale = new Vector3(6, 4, 0);
+                Vector3 rearview_mirror_position = new Vector3(0, 8.8f, 0);
+                Vector3 right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                Vector3 left_mirror_position = new Vector3(-14.5f, 8.3f, 0);
+                // right-side mirror for Truck & Van
+                float res = (float)Screen.width / (float)Screen.height;
+                if (Math.Abs(res - (16f / 9f)) < 0.1f)
+                {
+                    //ModConsole.Print("16:9");
+                    // default
+                }
+                else if (Math.Abs(res - (16f / 10f)) < 0.1f)
+                {
+                    //ModConsole.Print("16:10");
+                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                    left_mirror_position = new Vector3(-13.8f, 8.3f, 0);
+                }
+                else if (Math.Abs(res - (4f / 3f)) < 0.1f)
+                {
+                    //ModConsole.Print("4:3");
+                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                    left_mirror_position = new Vector3(-12, 8.3f, 0);
+                }
+                else if (Math.Abs(res - (3f / 2f)) < 0.1f)
+                {
+                    //ModConsole.Print("3:2");
+                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                    left_mirror_position = new Vector3(-12, 8.3f, 0);
+                }
+                else
+                {
+                    //ModConsole.Print("other");
+                    /*RIGHTSIDE_Mirror.transform.localPosition = new Vector3(0.1f, 0.034f, 0.1f);
+                    var view_point =  Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
+                    while (view_point.x > 0.8f)
+                    {
+                        RIGHTSIDE_Mirror.transform.localPosition -= new Vector3(0.05f, 0);
+                        view_point = Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
+                    }*/
+                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                    left_mirror_position = new Vector3(12, 8.5f, 0);
+                }
+
+                RIGHTSIDE_Mirror = CreateVirtualMirror(
+                    "RightVirtualMirror",
+                    right_mirror_position,
+                    sidemirror_scale,
+                    _rightMirrorTargetTexture
+                    );
+                LEFTSIDE_Mirror = CreateVirtualMirror(
+                    "LeftVirtualMirror",
+                    left_mirror_position,
+                    sidemirror_scale,
+                    _leftMirrorTargetTexture
+                    );
+                REARVIEW_Mirror = CreateVirtualMirror(
+                    "RearviewVirtualMirror",
+                    rearview_mirror_position,
+                    rearview_scale,
+                    _rearviewTargetTexture);
+#if DEBUG
+                test = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                test.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                test.transform.localEulerAngles = Vector3.zero;
+                test.GetComponent<Collider>().enabled = false;
+#endif
             }
             catch (Exception e)
             {
@@ -725,7 +656,21 @@ namespace VirtualMirror
             return true;
         }
 
-        private GameObject CreateVitualMirrorCam(String name, RenderTexture targetTexture)
+        private static Mesh MeshFlip(Mesh mesh)
+        {
+            var uvs = mesh.uv;
+            for (var i = 0; i < uvs.Length; i++)
+            {
+                if (Mathf.Approximately(uvs[i].x, 1.0f))
+                    uvs[i].x = 0.0f;
+                else
+                    uvs[i].x = 1.0f;
+            }
+            mesh.uv = uvs;
+            return mesh;
+        }
+
+        private static GameObject CreateVitualMirrorCam(String name, RenderTexture targetTexture)
         {
             GameObject obj = new GameObject(name);
             obj.transform.localEulerAngles = Vector3.zero;
@@ -737,28 +682,31 @@ namespace VirtualMirror
             return obj;
         }
 
-        private GameObject CreateVirtualMirror(String name, Vector3 localPosition, Vector3 scale, bool is_leftside = false)
+        private static GameObject CreateVirtualMirror(String name, Vector3 position, Vector3 scale, RenderTexture texture)
         {
-            GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            obj.transform.parent = Camera.main.transform;
-            obj.transform.localEulerAngles = Vector3.zero;
-            obj.GetComponent<Collider>().enabled = false;
-            obj.GetComponent<Renderer>().material = new Material(Shader.Find("Unlit/Texture"));
-            obj.name = name;
-            obj.layer = _fpsCamera.layer;
-            //obj.layer = _player.layer;
-            //obj.layer = GameObject.Find("GUI").layer;
-            obj.transform.localScale = new Vector3(scale.x, -scale.y, scale.z);
-            if (!is_leftside)
-            {
-                obj.transform.localPosition = localPosition;
-            }
-            else
-            {
-                obj.transform.localPosition = new Vector3(-localPosition.x, localPosition.y, localPosition.z);
-            }
+            /* hierarchy: GUI/HUD/Day/BarBG
+             *                                     |--/Data */
+            var hud = GameObject.Instantiate<GameObject>(GameObject.Find("GUI/HUD"));
+            hud.transform.localPosition = Vector3.zero;
+            hud.transform.localScale = Vector3.zero;
+            var day = hud.transform.Find("Day").gameObject;
+            day.transform.localPosition = Vector3.zero;
+            day.transform.localScale = Vector3.zero;
+            GameObject.Destroy(day.transform.Find("Data").gameObject);
+            var bg = day.transform.Find("BarBG").gameObject;
+            bg.name = name;
+            MeshFlip(bg.GetComponent<MeshFilter>().mesh);
+            bg.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Unlit/Texture"));
+            bg.GetComponent<MeshRenderer>().material.mainTexture = texture;
+            bg.transform.parent = GameObject.Find("GUI").transform;
+            bg.transform.localScale = scale;
+            bg.transform.localPosition = position;
+#if DEBUG
+            /* obj.SetActive(false); */
+#else
             obj.SetActive(false);
-            return obj;
+#endif
+            return bg;
         }
 
         private void SetCameraPositon(GameObject camera, Transform parent, Cam cam_settings/*, Vector3 local_position, Vector3 local_euler_angle, float near_clip_plane, float field_of_view = 20*/)
@@ -789,7 +737,7 @@ namespace VirtualMirror
             SwitchMirrors.Center;
             SwitchMirrors.RightLeft;
         **********************/
-        private void SetActive(int mirror_num, out bool rearview_mirror_active, out bool right_mirror_active, out bool left_mirror_active, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
+        private static void SetActive(int mirror_num, out bool rearview_mirror_active, out bool right_mirror_active, out bool left_mirror_active, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
         {
             // rearview
             if (mirror_num == (int)SwitchMirrorsNum.RightCenter ||
@@ -812,7 +760,7 @@ namespace VirtualMirror
                 mirror_num == (int)SwitchMirrorsNum.RightLeft ||
                 mirror_num == (int)SwitchMirrorsNum.All)
             {
-                right_mirror_active= true;
+                right_mirror_active = true;
                 //right_mirror.SetActive(true);
                 if (right_cam != null)
                     right_cam.SetActive(true);
@@ -861,7 +809,7 @@ namespace VirtualMirror
             settings.FarClipPlane = 100;
             settings.RenderTextureDepth = 16;
             settings.SideMirrorsRenderTextureWidth = 256;
-            settings.SideMirrorsRenderTextureHeight = 256+16;
+            settings.SideMirrorsRenderTextureHeight = 256 + 16;
             settings.RearviewMirrorsRenderTextureWidth = 1024;
             settings.RearviewMirrorsRenderTextureHeight = 256;
 
