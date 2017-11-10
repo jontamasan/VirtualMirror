@@ -39,9 +39,11 @@ namespace VirtualMirror
         private  GameObject RIGHTSIDE_Mirror;
         private  GameObject REARVIEW_Mirror;
         private GameObject LEFTSIDE_Mirror;
-        private RenderTexture _rightMirrorTargetTexture;
-        private RenderTexture _rearviewTargetTexture;
-        private RenderTexture _leftMirrorTargetTexture;
+        //private RenderTexture _rightMirrorTargetTexture;
+        private RenderTexture _rightRenderTexture;
+        private RenderTexture _leftRenderTexture;
+        private RenderTexture _rearviewRenderTexture;
+        //private RenderTexture _leftMirrorTargetTexture;
         private const String SETTINGS_FILE_NAME = "settings.xml";
         // car names using with GlobalVariables.FindFsmString("PlayerCurrentVehicle") returned value
         private const String GIFU = "Gifu";
@@ -64,15 +66,8 @@ namespace VirtualMirror
 
         private bool _isInit = true;
         private bool _isPlayerBoarded = true;
-        //private int _switchMirrorsValue = 0;
-        //private int _farClipPlane = 100;
         private Settings _settings;
-        private Vector3 _newPos = Vector3.zero;
-        private RenderTexture _rightRenderTexture;
-        private RenderTexture _leftRenderTexture;
-        private bool _rearviewMirrorActive;
-        private bool _rightMirrorActive;
-        private bool _leftMirrorActive;
+
         public static Cars CurrentCar { get; set; }
 
         private enum SwitchMirrorsNum
@@ -171,90 +166,88 @@ namespace VirtualMirror
             {
                 //Cars car_list;
 
-                string car_obj = GameObject.Find("PLAYER").transform.root.name; // If Player is driving mode, we can take car object via "PLAYER" root object.
+                string car_obj_name = GameObject.Find("PLAYER").transform.root.name; // If Player is driving mode, we can take car object via "PLAYER" root object.
                 switch (cars)
                 {
                     case GIFU:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj).transform,
+                            parent: GameObject.Find(car_obj_name).transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
-                        _rightRenderTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
                         break;
                     case VAN:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj).transform,
+                            parent: GameObject.Find(car_obj_name).transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
-                        _rightRenderTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
                         break;
                     case SATSUMA:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/Body/pivot_door_right/door right(Clone)").transform,
+                            parent: GameObject.Find(car_obj_name + "/Body/pivot_door_right/door right(Clone)").transform,
                             cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj + "/CarRearMirrorPivot").transform,
+                            parent: GameObject.Find(car_obj_name + "/CarRearMirrorPivot").transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
-                        _rightRenderTexture = _rightMirrorTargetTexture;
-                        _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _rightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case KEKMET:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/DriverDoors 1/doorr/door(right)").transform,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors 1/doorr/door(right)").transform,
                             cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj).transform,
+                            parent: GameObject.Find(car_obj_name).transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
                         SetCameraPositon(
                             camera: LEFTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/DriverDoors 1/doorl/door(leftx)").transform,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors 1/doorl/door(leftx)").transform,
                             cam_settings: CurrentCar.LeftCam
                             );
-                        _rightRenderTexture = _rightMirrorTargetTexture;
-                        _leftRenderTexture = _leftMirrorTargetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _rightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _leftRenderTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     case MUSCLE:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/DriverDoors/door(right)").transform,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors/door(right)").transform,
                             cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj).transform,
+                            parent: GameObject.Find(car_obj_name).transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
-                        _rightRenderTexture = _rightMirrorTargetTexture;
-                        _leftRenderTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        //RIGHTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = _rightMirrorTargetTexture;
-                        //LEFTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _rightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case BOAT:
                         break;
@@ -262,33 +255,25 @@ namespace VirtualMirror
                         break;
                     case RUSCKO:
                         CurrentCar = _settings.Cars.Find(x => x.Name == cars);
-                        //if (_buttonPressed)
-                        //{
-                        //    car_list.LeftCam.LocalPosition += _newPos;
-                        //    ModConsole.Print("in ruscko: " + car_list.LeftCam.LocalPosition);
-                        //    _buttonPressed = false;
-                        //}
-                        SwitchMirrors(CurrentCar);
+                        SwitchMirrors(CurrentCar, virtualMirrorKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/DriverDoors/doorr").transform,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors/doorr").transform,
                             cam_settings: CurrentCar.RightCam
                             );
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj).transform,
+                            parent: GameObject.Find(car_obj_name).transform,
                             cam_settings: CurrentCar.RearviewCam
                             );
                         SetCameraPositon(
                             camera: LEFTSIDE_Cam,
-                            parent: GameObject.Find(car_obj + "/DriverDoors/doorl").transform,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors/doorl").transform,
                             cam_settings: CurrentCar.LeftCam
                             );
-                        //LEFTSIDE_Mirror.GetComponent<Renderer>().material.mainTexture = _leftMirrorTargetTexture;
-                        //LEFTSIDE_Mirror.SetActive(true);
-                        _rightRenderTexture = _rightMirrorTargetTexture; // <- これいる？
-                        _leftRenderTexture = _leftMirrorTargetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, out _rearviewMirrorActive, out _rightMirrorActive, out _leftMirrorActive, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _rightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = _leftRenderTexture;
+                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     default:
 #if DEBUG
@@ -326,7 +311,7 @@ namespace VirtualMirror
             }
         }
 
-        private void SwitchMirrors(Cars car_list)
+        private static void SwitchMirrors(Cars car_list, Keybind virtualMirrorKey)
         {
             if (virtualMirrorKey.IsDown())
             {
@@ -338,6 +323,86 @@ namespace VirtualMirror
             }
         }
 
+        private void SetCameraPositon(GameObject camera, Transform parent, Cam cam_settings/*, Vector3 local_position, Vector3 local_euler_angle, float near_clip_plane, float field_of_view = 20*/)
+        {
+#if DEBUG
+            test.transform.parent = parent;
+            test.transform.localPosition = cam_settings.LocalPosition;
+            test.transform.localEulerAngles = cam_settings.LocalEulerAngles;
+#endif
+            camera.transform.parent = parent;
+            camera.transform.localPosition = cam_settings.LocalPosition;
+            camera.transform.localEulerAngles = cam_settings.LocalEulerAngles;
+            camera.GetComponent<Camera>().nearClipPlane = cam_settings.NearClipPlane;
+            camera.GetComponent<Camera>().farClipPlane = _settings.FarClipPlane;
+            camera.GetComponent<Camera>().fieldOfView = cam_settings.FieldOfView;
+        }
+
+        /**********************
+            SwitchMirrors.None;
+            SwitchMirrors.Right;
+            SwitchMirrors.RightCenter;
+            SwitchMirrors.All;
+            SwitchMirrors.Center;
+            SwitchMirrors.RightLeft;
+        **********************/
+        private static void SetActive(int mirror_num, GameObject rearview_mirror, GameObject right_mirror, GameObject left_mirror, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
+        {
+            // rearview
+            if (mirror_num == (int)SwitchMirrorsNum.RightCenter ||
+                mirror_num == (int)SwitchMirrorsNum.All ||
+                mirror_num == (int)SwitchMirrorsNum.Center)
+            {
+                rearview_mirror.SetActive(true);
+                rearview_cam.SetActive(true);
+            }
+            else
+            {
+                rearview_mirror.SetActive(false);
+                rearview_cam.SetActive(false);
+            }
+            // rightside
+            if (mirror_num == (int)SwitchMirrorsNum.Right ||
+                mirror_num == (int)SwitchMirrorsNum.RightCenter ||
+                mirror_num == (int)SwitchMirrorsNum.RightLeft ||
+                mirror_num == (int)SwitchMirrorsNum.All)
+            {
+                right_mirror.SetActive(true);
+                if (right_cam != null)
+                    right_cam.SetActive(true);
+            }
+            else
+            {
+                right_mirror.SetActive(false);
+                if (right_cam != null)
+                    right_cam.SetActive(false);
+            }
+            // leftside
+            if (mirror_num == (int)SwitchMirrorsNum.All ||
+                mirror_num == (int)SwitchMirrorsNum.RightLeft)
+            {
+                left_mirror.SetActive(true);
+                if (left_cam != null)
+                    left_cam.SetActive(true);
+            }
+            else
+            {
+                left_mirror.SetActive(false);
+                if (left_cam != null)
+                    left_cam.SetActive(false);
+            }
+        }
+
+        private void SetDeactiveAll()
+        {
+            RIGHTSIDE_Cam.SetActive(false);
+            REARVIEW_Cam.SetActive(false);
+            LEFTSIDE_Cam.SetActive(false);
+            RIGHTSIDE_Mirror.SetActive(false);
+            REARVIEW_Mirror.SetActive(false);
+            LEFTSIDE_Mirror.SetActive(false);
+        }
+        
         private bool Initialize()
         {
             try
@@ -357,26 +422,26 @@ namespace VirtualMirror
                 //    }
                 //}
 
-                _rightMirrorTargetTexture = new RenderTexture(
+                _rightRenderTexture = new RenderTexture(
                     _settings.SideMirrorsRenderTextureWidth,
                     _settings.SideMirrorsRenderTextureHeight,
                     _settings.RenderTextureDepth
                     );
-                RIGHTSIDE_Cam = CreateVitualMirrorCam("RIGHTSIDE_Cam", _rightMirrorTargetTexture);
+                RIGHTSIDE_Cam = CreateVitualMirrorCam("RIGHTSIDE_Cam", _rightRenderTexture);
 
-                _leftMirrorTargetTexture = new RenderTexture(
+                _leftRenderTexture = new RenderTexture(
                     _settings.SideMirrorsRenderTextureWidth,
                     _settings.SideMirrorsRenderTextureHeight,
                     _settings.RenderTextureDepth
                     );
-                LEFTSIDE_Cam = CreateVitualMirrorCam("LEFTSIDE_Cam", _leftMirrorTargetTexture);
+                LEFTSIDE_Cam = CreateVitualMirrorCam("LEFTSIDE_Cam", _leftRenderTexture);
 
-                _rearviewTargetTexture = new RenderTexture(
+                _rearviewRenderTexture = new RenderTexture(
                     _settings.RearviewMirrorsRenderTextureWidth,
                     _settings.RearviewMirrorsRenderTextureHeight,
                     _settings.RenderTextureDepth
                     );
-                REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", _rearviewTargetTexture);
+                REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", _rearviewRenderTexture);
 
                 Vector3 rearview_scale = new Vector3(10, 3, 0);
                 Vector3 sidemirror_scale = new Vector3(6, 4, 0);
@@ -426,19 +491,19 @@ namespace VirtualMirror
                     "RightVirtualMirror",
                     right_mirror_position,
                     sidemirror_scale,
-                    _rightMirrorTargetTexture
+                    _rightRenderTexture
                     );
                 LEFTSIDE_Mirror = CreateVirtualMirror(
                     "LeftVirtualMirror",
                     left_mirror_position,
                     sidemirror_scale,
-                    _leftMirrorTargetTexture
+                    _leftRenderTexture
                     );
                 REARVIEW_Mirror = CreateVirtualMirror(
                     "RearviewVirtualMirror",
                     rearview_mirror_position,
                     rearview_scale,
-                    _rearviewTargetTexture);
+                    _rearviewRenderTexture);
 #if DEBUG
                 test = GameObject.CreatePrimitive(PrimitiveType.Capsule);
                 test.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
@@ -467,19 +532,19 @@ namespace VirtualMirror
             return mesh;
         }
 
-        private static GameObject CreateVitualMirrorCam(String name, RenderTexture targetTexture)
+        private static GameObject CreateVitualMirrorCam(String name, RenderTexture renderTexture)
         {
             GameObject obj = new GameObject(name);
             obj.transform.localEulerAngles = Vector3.zero;
             obj.AddComponent<Camera>();
-            obj.GetComponent<Camera>().targetTexture = targetTexture;
+            obj.GetComponent<Camera>().targetTexture = renderTexture;
             obj.GetComponent<Camera>().fieldOfView = 20; // default fov
             obj.GetComponent<Camera>().cullingMask = -181598775; // magick number for don't draw player-layer object.
             obj.SetActive(false);
             return obj;
         }
 
-        private static GameObject CreateVirtualMirror(String name, Vector3 position, Vector3 scale, RenderTexture texture)
+        private static GameObject CreateVirtualMirror(String name, Vector3 position, Vector3 scale, RenderTexture renderTexture)
         {
             /* hierarchy: GUI/HUD/Day/BarBG
              *                                     |--/Data */
@@ -492,112 +557,20 @@ namespace VirtualMirror
             GameObject.Destroy(day.transform.Find("Data").gameObject);
             var bg = day.transform.Find("BarBG").gameObject;
             bg.name = name;
-            MeshFlip(bg.GetComponent<MeshFilter>().mesh);
+            MeshFlip(bg.GetComponent<MeshFilter>().mesh); // MeshFlip is GOD!!!1
             bg.GetComponent<MeshRenderer>().material = new Material(Shader.Find("Unlit/Texture"));
-            bg.GetComponent<MeshRenderer>().material.mainTexture = texture;
+            bg.GetComponent<MeshRenderer>().material.mainTexture = renderTexture;
             bg.transform.parent = GameObject.Find("GUI").transform;
             bg.transform.localScale = scale;
             bg.transform.localPosition = position;
 #if DEBUG
-            /* obj.SetActive(false); */
+            /* bg.SetActive(false); */
 #else
-            obj.SetActive(false);
+            bg.SetActive(false);
 #endif
             return bg;
         }
 
-        private void SetCameraPositon(GameObject camera, Transform parent, Cam cam_settings/*, Vector3 local_position, Vector3 local_euler_angle, float near_clip_plane, float field_of_view = 20*/)
-        {
-#if DEBUG
-            test.transform.parent = parent;
-            test.transform.localPosition = cam_settings.LocalPosition;
-            test.transform.localEulerAngles = cam_settings.LocalEulerAngles;
-#endif
-            camera.transform.parent = parent;
-            camera.transform.localPosition = cam_settings.LocalPosition;
-            //camera.transform.TransformPoint(cam_settings.LocalPosition);
-            //camera.transform.localPosition = camera.transform.InverseTransformPoint(camera.transform.TransformPoint(cam_settings.LocalPosition));
-            //camera.transform.localPosition = local_position;
-            camera.transform.localEulerAngles = cam_settings.LocalEulerAngles;
-            //camera.transform.localEulerAngles = local_euler_angle;
-            camera.GetComponent<Camera>().nearClipPlane = cam_settings.NearClipPlane;
-            //camera.GetComponent<Camera>().nearClipPlane = near_clip_plane;
-            camera.GetComponent<Camera>().farClipPlane = _settings.FarClipPlane;
-            camera.GetComponent<Camera>().fieldOfView = cam_settings.FieldOfView;
-        }
-
-        /**********************
-            SwitchMirrors.None;
-            SwitchMirrors.Right;
-            SwitchMirrors.RightCenter;
-            SwitchMirrors.All;
-            SwitchMirrors.Center;
-            SwitchMirrors.RightLeft;
-        **********************/
-        private static void SetActive(int mirror_num, out bool rearview_mirror_active, out bool right_mirror_active, out bool left_mirror_active, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
-        {
-            // rearview
-            if (mirror_num == (int)SwitchMirrorsNum.RightCenter ||
-                mirror_num == (int)SwitchMirrorsNum.All ||
-                mirror_num == (int)SwitchMirrorsNum.Center)
-            {
-                rearview_mirror_active = true;
-                //rearview_mirror.SetActive(true);
-                rearview_cam.SetActive(true);
-            }
-            else
-            {
-                rearview_mirror_active = false;
-                //rearview_mirror.SetActive(false);
-                rearview_cam.SetActive(false);
-            }
-            // rightside
-            if (mirror_num == (int)SwitchMirrorsNum.Right ||
-                mirror_num == (int)SwitchMirrorsNum.RightCenter ||
-                mirror_num == (int)SwitchMirrorsNum.RightLeft ||
-                mirror_num == (int)SwitchMirrorsNum.All)
-            {
-                right_mirror_active = true;
-                //right_mirror.SetActive(true);
-                if (right_cam != null)
-                    right_cam.SetActive(true);
-            }
-            else
-            {
-                right_mirror_active = false;
-                //right_mirror.SetActive(false);
-                if (right_cam != null)
-                    right_cam.SetActive(false);
-            }
-            // leftside
-            if (mirror_num == (int)SwitchMirrorsNum.All ||
-                mirror_num == (int)SwitchMirrorsNum.RightLeft)
-            {
-                left_mirror_active = true;
-                if (left_cam != null)
-                    left_cam.SetActive(true);
-            }
-            else
-            {
-                left_mirror_active = false;
-                if (left_cam != null)
-                    left_cam.SetActive(false);
-            }
-        }
-
-        private void SetDeactiveAll()
-        {
-            _rightMirrorActive = false;
-            _leftMirrorActive = false;
-            _rearviewMirrorActive = false;
-            RIGHTSIDE_Cam.SetActive(false);
-            REARVIEW_Cam.SetActive(false);
-            LEFTSIDE_Cam.SetActive(false);
-            //RIGHTSIDE_Mirror.SetActive(false);
-            //REARVIEW_Mirror.SetActive(false);
-            //LEFTSIDE_Mirror.SetActive(false);
-        }
-        
         /// <summary>
         /// Create default mirror settings
         /// </summary>
@@ -719,22 +692,22 @@ namespace VirtualMirror
                 SwitchMirrorsNum = (int)SwitchMirrorsNum.Right,
                 RightCam = new Cam
                 {
-                    LocalPosition = new Vector3(0, 0.3f, 0),
-                    LocalEulerAngles = new Vector3(0, 0, 0),
+                    LocalPosition = new Vector3(0.5f, 0, 0.5f),
+                    LocalEulerAngles = new Vector3(0, 250, 270),
                     NearClipPlane = 0.2f,
                     FieldOfView = 30
                 },
                 RearviewCam = new Cam
                 {
-                    LocalPosition = new Vector3(0, 0, 0),
-                    LocalEulerAngles = new Vector3(0, 0, 0),
+                    LocalPosition = new Vector3(0, 0.8f, 0),
+                    LocalEulerAngles = new Vector3(0, 180, 0),
                     NearClipPlane = 1.9f,
                     FieldOfView = 20
                 },
                 LeftCam = new Cam
                 {
-                    LocalPosition = new Vector3(0.8f, 0, 0.4f), // z,x,y
-                    LocalEulerAngles = new Vector3(6, 262, 270), // ,,y
+                    LocalPosition = new Vector3(0.5f, 0, 0.5f), // z,x,y
+                    LocalEulerAngles = new Vector3(6, 250, 270), // ,,y
                     NearClipPlane = 0.2f,
                     FieldOfView = 30
                 }
