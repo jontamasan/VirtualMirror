@@ -37,8 +37,9 @@ namespace VirtualMirror
 
         public static FsmBool IsPlayerInMenu;
         public static bool IsGuiActive;
-        public static bool IsGuiLeftMirrorEnable;
-        public static bool IsGuiRightMirrorEnable;
+        public static bool IsGuiLeftMirrorEnabled;
+        public static bool IsGuiRightMirrorEnabled;
+        public static bool IsGuiRearviewMirrorEnabled;
 
         public static Settings Settings;
         public static Cars CurrentCar;
@@ -351,11 +352,13 @@ namespace VirtualMirror
             {
                 rearview_mirror.SetActive(true);
                 rearview_cam.SetActive(true);
+                IsGuiRearviewMirrorEnabled = true;
             }
             else
             {
                 rearview_mirror.SetActive(false);
                 rearview_cam.SetActive(false);
+                IsGuiRearviewMirrorEnabled = false;
             }
             // rightside
             if (mirror_num == (int)SwitchMirrorsNum.Right ||
@@ -365,13 +368,19 @@ namespace VirtualMirror
             {
                 right_mirror.SetActive(true);
                 if (right_cam != null)
+                {
                     right_cam.SetActive(true);
+                    IsGuiRightMirrorEnabled = true;
+                }
             }
             else
             {
                 right_mirror.SetActive(false);
                 if (right_cam != null)
+                {
                     right_cam.SetActive(false);
+                    IsGuiRightMirrorEnabled = false;
+                }
             }
             // leftside
             if (mirror_num == (int)SwitchMirrorsNum.All ||
@@ -379,13 +388,19 @@ namespace VirtualMirror
             {
                 left_mirror.SetActive(true);
                 if (left_cam != null)
+                {
                     left_cam.SetActive(true);
+                    IsGuiLeftMirrorEnabled = true;
+                }
             }
             else
             {
                 left_mirror.SetActive(false);
                 if (left_cam != null)
+                {
                     left_cam.SetActive(false);
+                    IsGuiLeftMirrorEnabled = false;
+                }
             }
         }
 
