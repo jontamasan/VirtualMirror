@@ -159,13 +159,8 @@ namespace VirtualMirror
             var cars = FsmVariables.GlobalVariables.FindFsmString("PlayerCurrentVehicle").Value;
             // activate once if player is boarded a car
             if (cars.Length != 0 && _isPlayerBoarded ||
-                cars.Length != 0 && virtualMirrorKey.IsDown()
-                //||
-                //_buttonPressed
-                )
+                cars.Length != 0 && virtualMirrorKey.IsDown() )
             {
-                //Cars car_list;
-
                 string car_obj_name = GameObject.Find("PLAYER").transform.root.name; // If Player is driving mode, we can take car object via "PLAYER" root object.
                 switch (cars)
                 {
@@ -410,17 +405,6 @@ namespace VirtualMirror
                 _player = GameObject.Find("PLAYER");
                 if (!_player) return false;
                 _playerInMenu = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
-                //_fpsCamera = GameObject.Find("FPSCamera");
-                //_fpsfpsCamera = GameObject.Find("FPSCamera/FPSCamera");
-                //_CAM_VERTICAL = GameObject.Find("PLAYER/Pivot/Camera/FPSCamera");
-                //foreach (var r in Resources.FindObjectsOfTypeAll<GameObject>())
-                //{
-                //    if (r.name == "OptionsMenu")
-                //    {
-                //        _optionMenu = r;
-                //        break;
-                //    }
-                //}
 
                 _rightRenderTexture = new RenderTexture(
                     _settings.SideMirrorsRenderTextureWidth,
@@ -448,7 +432,6 @@ namespace VirtualMirror
                 Vector3 rearview_mirror_position = new Vector3(0, 8.8f, 0);
                 Vector3 right_mirror_position = new Vector3(14.5f, 8.3f, 0);
                 Vector3 left_mirror_position = new Vector3(-14.5f, 8.3f, 0);
-                // right-side mirror for Truck & Van
                 float res = (float)Screen.width / (float)Screen.height;
                 if (Math.Abs(res - (16f / 9f)) < 0.1f)
                 {

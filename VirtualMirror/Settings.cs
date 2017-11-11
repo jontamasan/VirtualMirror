@@ -7,7 +7,7 @@ namespace VirtualMirror
     public class Settings
     {
         public string Version { get; set; }
-        // TODO: Change XmlElement name
+        [System.Xml.Serialization.XmlElement("MaxRenderingDistance")]
         public int FarClipPlane { get; set; }
         public int RenderTextureDepth { get; set; }
         public int SideMirrorsRenderTextureWidth { get; set; }
@@ -31,10 +31,10 @@ namespace VirtualMirror
     }
     public class Cam
     {
+        [System.Xml.Serialization.XmlElement("MinRenderingDistance")]
         public float NearClipPlane { get; set; }
         public float FieldOfView { get; set; }
         public Vector3 LocalPosition { get; set; }
         public Vector3 LocalEulerAngles { get; set; }
-        public Vector3 LocalScalse { get; set; }
     }
 }
