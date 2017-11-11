@@ -25,12 +25,13 @@ namespace VirtualMirror
         public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F12, KeyCode.LeftControl);
 
         private GameObject _player;
-        private FsmBool _playerInMenu;
-        private bool _guiActive;
+        public static FsmBool IsPlayerInMenu;
+        public static bool IsGuiActive;
 #if DEBUG
         private GameObject test;
 #endif
-        Rect rect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
+        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
+        private Rect _GUIWindowRect;
 
         public static GameObject RIGHTSIDE_Cam;
         public static GameObject REARVIEW_Cam;
@@ -89,6 +90,7 @@ namespace VirtualMirror
             Keybind.Add(this, toggleMenuKey);
 
             _settings = CreateData(Version);
+            _GUIWindowRect = _defaultGUIWindowRect;
             // load settings from file.
             if (File.Exists(Path.Combine(ModLoader.GetModConfigFolder(this), SETTINGS_FILE_NAME)))
             {
@@ -105,16 +107,15 @@ namespace VirtualMirror
         /// </summary>
         public override void OnGUI()
         {
-            if (_guiActive)
+            if (IsGuiActive)
             {
                 GUI.backgroundColor = Color.gray;
                 GUI.skin.window.fontStyle = FontStyle.Bold;
-                rect = GUI.Window(0, rect, DoWindow, "MIRROR MOD OPTION MENU");
+                _GUIWindowRect = GUI.Window(0, _GUIWindowRect, DoWindow, "MIRROR MOD OPTION MENU");
             }
             else
             {
-                // Reset window position, if GUI is closed.
-                rect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 500);
+                _GUIWindowRect = _defaultGUIWindowRect;  // Reset window position, if GUI is closed.
             }
         }
 
@@ -124,8 +125,6 @@ namespace VirtualMirror
             SettingsGUI gui = new SettingsGUI();
             gui.DoWindow();
         }
-
-
 
         /// <summary>
         /// Update is called once per frame
@@ -143,15 +142,15 @@ namespace VirtualMirror
             #region keydown
             if (toggleMenuKey.IsDown())
             {
-                if (_guiActive)
+                if (IsGuiActive)
                 {
-                    _guiActive = false;
-                    _playerInMenu.Value = false;
+                    IsGuiActive = false;
+                    IsPlayerInMenu.Value = false;
                 }
                 else
                 {
-                    _playerInMenu.Value = true;
-                    _guiActive = true;
+                    IsPlayerInMenu.Value = true;
+                    IsGuiActive = true;
                 }
             }
             #endregion
@@ -404,7 +403,7 @@ namespace VirtualMirror
             {
                 _player = GameObject.Find("PLAYER");
                 if (!_player) return false;
-                _playerInMenu = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
+                IsPlayerInMenu = FsmVariables.GlobalVariables.FindFsmBool("PlayerInMenu");
 
                 _rightRenderTexture = new RenderTexture(
                     _settings.SideMirrorsRenderTextureWidth,
@@ -564,7 +563,7 @@ namespace VirtualMirror
             Settings settings = new Settings { Cars = new List<Cars>() };
 
             settings.Version = version;
-            settings.FarClipPlane = 100;
+            settings.FarClipPlane = 200;
             settings.RenderTextureDepth = 16;
             settings.SideMirrorsRenderTextureWidth = 256;
             settings.SideMirrorsRenderTextureHeight = 256;

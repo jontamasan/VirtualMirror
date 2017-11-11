@@ -28,9 +28,9 @@ namespace VirtualMirror
             GUILayout.Label("Translate", labelStyle);
 
             #region TRANLATE
-            #region Left side mirror
             GUILayout.BeginHorizontal();
             {
+                #region Left side mirror
                 GUILayout.BeginVertical("box");
                 {
                     GUILayout.FlexibleSpace();
@@ -85,8 +85,8 @@ namespace VirtualMirror
                     GUILayout.FlexibleSpace();
                 }
                 GUILayout.EndVertical();
-            #endregion
-            #region Rearview mirror
+                #endregion
+                #region Rearview mirror
                 GUILayout.BeginVertical("box");
                 GUILayout.FlexibleSpace();
                 {
@@ -197,17 +197,17 @@ namespace VirtualMirror
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
+                #endregion
             }
             GUILayout.EndHorizontal();
-            #endregion
             #endregion
 
             GUILayout.Label("Rotate", labelStyle);
 
             #region ROTATION
-            #region Left side mirror
             GUILayout.BeginHorizontal();
             {
+                #region Left side mirror
                 GUILayout.BeginVertical("box");
                 GUILayout.FlexibleSpace();
                 {
@@ -321,6 +321,7 @@ namespace VirtualMirror
                 #endregion
                 #region Right side mirror
                 GUILayout.BeginVertical("box");
+                GUILayout.FlexibleSpace();
                 {
                     GUILayout.BeginHorizontal();
                     {
@@ -373,9 +374,9 @@ namespace VirtualMirror
                 }
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
+                #endregion
             }
             GUILayout.EndHorizontal();
-            #endregion
             #endregion
 
             #region Label Min draw distance
@@ -463,6 +464,12 @@ namespace VirtualMirror
             }
             GUILayout.EndHorizontal();
             #endregion
+
+            if (GUILayout.Button("Close"))
+            {
+                VirtualMirror.IsGuiActive = false;
+                VirtualMirror.IsPlayerInMenu.Value = false;
+            }
 
             GUI.DragWindow();
         }
