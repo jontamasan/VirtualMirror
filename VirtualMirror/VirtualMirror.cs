@@ -24,28 +24,33 @@ namespace VirtualMirror
         public Keybind virtualMirrorKey = new Keybind("virtualMirror", "Virtual Mirror", KeyCode.F10);
         public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F12, KeyCode.LeftControl);
 
-        private GameObject _player;
-        public static FsmBool IsPlayerInMenu;
-        public static bool IsGuiActive;
-#if DEBUG
-        private GameObject test;
-#endif
-        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 400);
-        private Rect _GUIWindowRect;
-
+        // public valiables
         public static GameObject RIGHTSIDE_Cam;
         public static GameObject REARVIEW_Cam;
         public static GameObject LEFTSIDE_Cam;
-
         public static GameObject RIGHTSIDE_Mirror;
         public static GameObject REARVIEW_Mirror;
         public static GameObject LEFTSIDE_Mirror;
-        //private RenderTexture _rightMirrorTargetTexture;
         public static RenderTexture RightRenderTexture;
         public static RenderTexture LeftRenderTexture;
         public static RenderTexture RearviewRenderTexture;
-        //private RenderTexture _leftMirrorTargetTexture;
+
+        public static FsmBool IsPlayerInMenu;
+        public static bool IsGuiActive;
+        public static bool IsGuiLeftMirrorEnable;
+        public static bool IsGuiRightMirrorEnable;
+
+        public static Settings Settings;
+        public static Cars CurrentCar;
+
+        // private valiables
         private const String SETTINGS_FILE_NAME = "settings.xml";
+        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 400);
+        private Rect _GUIWindowRect;
+        private GameObject _player;
+        private bool _isInit = true;
+        private bool _isPlayerBoarded = true;
+        
         // car names using with GlobalVariables.FindFsmString("PlayerCurrentVehicle") returned value
         private const String GIFU = "Gifu";
         private const String VAN = "Hayosiko";
@@ -55,6 +60,7 @@ namespace VirtualMirror
         private const String BOAT = "Boat";
         private const String MOPED = "Jonnez ES";
         private const String RUSCKO = "Ruscko";
+
         // car object names using with GameObject.Find
         //private const String OBJ_GIFU = "GIFU(750/450psi)";
         //private const String OBJ_VAN = "HAYOSIKO(1500kg, 250)";
@@ -65,12 +71,6 @@ namespace VirtualMirror
         //private const String OBJ_MOPED = "JONNEZ ES(Clone)";
         //private const String OBJ_RUSCKO = "RCO_RUSCKO12(270)";
 
-        private bool _isInit = true;
-        private bool _isPlayerBoarded = true;
-
-        public static Settings Settings;
-        public static Cars CurrentCar;
-
         private enum SwitchMirrorsNum
         {
             None,
@@ -80,6 +80,10 @@ namespace VirtualMirror
             Center,
             RightLeft
         }
+
+#if DEBUG
+        private GameObject test;
+#endif
 
         /// <summary>
         /// Called when mod is loading
@@ -111,7 +115,7 @@ namespace VirtualMirror
             {
                 GUI.backgroundColor = Color.gray;
                 GUI.skin.window.fontStyle = FontStyle.Bold;
-                _GUIWindowRect = GUI.Window(0, _GUIWindowRect, DoWindow, "MIRROR MOD OPTION MENU");
+                _GUIWindowRect = GUI.Window(0, _GUIWindowRect, DoWindow, "VIRTUAL MIRROR OPTION MENU");
             }
             else
             {
@@ -119,7 +123,6 @@ namespace VirtualMirror
             }
         }
 
-        // Change virtual mirror camera position
         private static void DoWindow(int id)
         {
             SettingsGUI gui = new SettingsGUI();

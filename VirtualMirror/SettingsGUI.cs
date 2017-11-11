@@ -13,11 +13,11 @@ namespace VirtualMirror
         private float _buttonWidth = 40;
         private float _translateFactor = 0.02f;
         private float _rotationFactor = 0.25f;
-        private static int _tabInt = 0;
-        private static int _selectTextureResolution = 0;
-        private string[] tabName = { "Camera Settings", "Ovarall Settings" };
-        private string[] sideResolutionText = { "64", "128", "256", "512"};
-        private string[] rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
+        //private static int _tabInt = 0;
+        //private static int _selectTextureResolution = 0;
+        //private string[] tabName = { "Camera Settings", "Ovarall Settings" };
+        //private string[] sideResolutionText = { "64", "128", "256", "512"};
+        //private string[] rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
 
         public void DoWindow()
         {
@@ -27,488 +27,431 @@ namespace VirtualMirror
             labelStyle.fontStyle = FontStyle.Bold;
             labelStyle.normal.textColor = Color.gray;
 
-            _tabInt = GUILayout.Toolbar(_tabInt, tabName);
+            GUILayout.Label("Translate", labelStyle);
 
-            if (_tabInt == 0)
+            #region TRANLATE
+            using (var horizontal1 = new GUILayout.HorizontalScope()) 
             {
-                GUILayout.Label("Translate", labelStyle);
-
-                #region TRANLATE
-                using (var horizontal1 = new GUILayout.HorizontalScope()) 
+                #region Left side mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
                 {
-                    #region Left side mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, -_translateFactor, 0, 0);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, _translateFactor, 0, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, _translateFactor, 0, 0);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -_translateFactor, 0);
-                            }
-                            if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                LEFTSIDE_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalPosition;
-                                _currentCar.LeftCam.LocalPosition = LEFTSIDE_Cam.transform.localPosition;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, _translateFactor, 0);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -_translateFactor, 0, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                    #region Rearview mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, 0, -_translateFactor);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, _translateFactor, 0, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, 0, _translateFactor);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, -_translateFactor, 0, 0);
-                            }
-                            if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                REARVIEW_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).RearviewCam.LocalPosition;
-                                _currentCar.RearviewCam.LocalPosition = REARVIEW_Cam.transform.localPosition;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, _translateFactor, 0, 0);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, -_translateFactor, 0, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                    #region Right side mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, -_translateFactor, 0, 0);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, _translateFactor, 0, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, _translateFactor, 0, 0);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, -_translateFactor, 0);
-                            }
-                            if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                RIGHTSIDE_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).RightCam.LocalPosition;
-                                _currentCar.RightCam.LocalPosition = RIGHTSIDE_Cam.transform.localPosition;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, _translateFactor, 0);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, -_translateFactor, 0, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                }
-                #endregion
-
-                GUILayout.Label("Rotate", labelStyle);
-
-                #region ROTATION
-                using (var horizontal1 = new GUILayout.HorizontalScope())
-                {
-                    #region Left side mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.right, -_rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.up, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.right, _rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.forward, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                LEFTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles;
-                                _currentCar.LeftCam.LocalEulerAngles = LEFTSIDE_Cam.transform.localEulerAngles;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.forward, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.up, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                    #region Rearview Mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.forward, -_rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.right, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.forward, _rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.up, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                REARVIEW_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).RearviewCam.LocalEulerAngles;
-                                _currentCar.RearviewCam.LocalEulerAngles = REARVIEW_Cam.transform.localEulerAngles;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.up, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.right, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                    #region Right side mirror
-                    using (var virtical1 = new GUILayout.VerticalScope("box"))
-                    {
-                        GUILayout.FlexibleSpace();
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.right, -_rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.up, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.right, _rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.forward, _rotationFactor, Space.World);
-                            }
-                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
-                                RIGHTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).RightCam.LocalEulerAngles;
-                                _currentCar.RightCam.LocalEulerAngles = RIGHTSIDE_Cam.transform.localEulerAngles;
-                            }
-                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.forward, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        using (var horizontal2 = new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.FlexibleSpace();
-                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
-                            {
-                                _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.up, -_rotationFactor, Space.World);
-                            }
-                            GUILayout.FlexibleSpace();
-                        }
-                        GUILayout.FlexibleSpace();
-                    }
-                    #endregion
-                }
-                #endregion
-
-                #region Label Min draw distance
-                using (var scope = new GUILayout.HorizontalScope())
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        GUILayout.BeginVertical();
-                        {
-                            GUILayout.Label("Min draw distance", labelStyle);
-                        }
-                        GUILayout.EndVertical();
-                    }
-                }
-                #endregion
-
-                #region Slider Min draw distance
-                using (var horizontal1 = new GUILayout.HorizontalScope())
-                {
+                    GUILayout.FlexibleSpace();
                     using (var horizontal2 = new GUILayout.HorizontalScope())
                     {
-                        LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                        LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
-                        _currentCar.LeftCam.NearClipPlane = LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
+                        //if (_currentCar.Name == VirtualMirror.GIFU ||
+                        //    _currentCar.Name == VirtualMirror.VAN ||
+                        //    _currentCar.Name == VirtualMirror.SATSUMA ||
+                        //    _currentCar.Name == VirtualMirror.MUSCLE)
+                        //{
+                        //    GUI.enabled = false;
+                        //}
+                        //else
+                        //{
+                        //    GUI.enabled = true;
+                        //}
+                        GUILayout.FlexibleSpace();
+
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
+                        {
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, -_translateFactor, 0, 0);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, _translateFactor, 0, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
+                        {
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, _translateFactor, 0, 0);
+                        }
+                        GUILayout.FlexibleSpace();
                     }
                     using (var horizontal2 = new GUILayout.HorizontalScope())
                     {
-                        REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(REARVIEW_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                        REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(REARVIEW_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
-                        _currentCar.RearviewCam.NearClipPlane = REARVIEW_Cam.GetComponent<Camera>().nearClipPlane;
-                    }
-                    using (var horizontal2 = new GUILayout.HorizontalScope())
-                    {
-                        RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                        RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
-                        _currentCar.RightCam.NearClipPlane = RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
-                    }
-                }
-                #endregion
-
-                #region Label FOV
-                using (var scope = new GUILayout.HorizontalScope())
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        GUILayout.BeginVertical();
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
                         {
-                            GUILayout.Label("FOV", labelStyle);
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -_translateFactor, 0);
                         }
-                        GUILayout.EndVertical();
+                        if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            LEFTSIDE_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalPosition;
+                            _currentCar.LeftCam.LocalPosition = LEFTSIDE_Cam.transform.localPosition;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, _translateFactor, 0);
+                        }
+                        GUILayout.FlexibleSpace();
                     }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalPosition = Translate(LEFTSIDE_Cam, 0, -_translateFactor, 0, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.FlexibleSpace();
+                    //GUI.enabled = true;
                 }
                 #endregion
-
-                #region Slider FOV
-                using (var horizontal1 = new GUILayout.HorizontalScope())
+                #region Rearview mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
                 {
+                    GUILayout.FlexibleSpace();
                     using (var horizontal2 = new GUILayout.HorizontalScope())
                     {
-                        LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                        LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
-                        _currentCar.LeftCam.FieldOfView = LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView;
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, 0, -_translateFactor);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, _translateFactor, 0, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, 0, _translateFactor);
+                        }
+                        GUILayout.FlexibleSpace();
                     }
                     using (var horizontal2 = new GUILayout.HorizontalScope())
                     {
-                        REARVIEW_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(REARVIEW_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                        REARVIEW_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(REARVIEW_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
-                        _currentCar.RearviewCam.FieldOfView = REARVIEW_Cam.GetComponent<Camera>().fieldOfView;
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, -_translateFactor, 0, 0);
+                        }
+                        if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            REARVIEW_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).RearviewCam.LocalPosition;
+                            _currentCar.RearviewCam.LocalPosition = REARVIEW_Cam.transform.localPosition;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, _translateFactor, 0, 0);
+                        }
+                        GUILayout.FlexibleSpace();
                     }
                     using (var horizontal2 = new GUILayout.HorizontalScope())
                     {
-                        RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                        RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
-                        _currentCar.RightCam.FieldOfView = RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView;
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalPosition = Translate(REARVIEW_Cam, 0, -_translateFactor, 0, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
                     }
+                    GUILayout.FlexibleSpace();
                 }
                 #endregion
-
+                #region Right side mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
+                {
+                    GUILayout.FlexibleSpace();
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // backword
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, -_translateFactor, 0, 0);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, _translateFactor, 0, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("|", GUILayout.MaxWidth(_buttonWidth))) // forword
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, _translateFactor, 0, 0);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, -_translateFactor, 0);
+                        }
+                        if (GUILayout.Button("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            RIGHTSIDE_Cam.transform.localPosition = revert.Cars.Find(x => x.Name == _currentCar.Name).RightCam.LocalPosition;
+                            _currentCar.RightCam.LocalPosition = RIGHTSIDE_Cam.transform.localPosition;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, _translateFactor, 0);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalPosition = Translate(RIGHTSIDE_Cam, 0, -_translateFactor, 0, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.FlexibleSpace();
+                }
+                #endregion
             }
-            else if (_tabInt == 1)
+            #endregion
+
+            GUILayout.Label("Rotate", labelStyle);
+
+            #region ROTATION
+            using (var horizontal1 = new GUILayout.HorizontalScope())
             {
-                GUILayout.Label("Max draw distance", labelStyle);
-                using (var scope = new GUILayout.HorizontalScope())
+                #region Left side mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
                 {
-                    VirtualMirror.Settings.FarClipPlane = int.Parse(GUILayout.TextField(VirtualMirror.Settings.FarClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                    VirtualMirror.Settings.FarClipPlane = (int)GUILayout.HorizontalSlider(VirtualMirror.Settings.FarClipPlane, 1, 1000);
-                    VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
+                    GUILayout.FlexibleSpace();
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.right, -_rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.up, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.right, _rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.forward, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            LEFTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).LeftCam.LocalEulerAngles;
+                            _currentCar.LeftCam.LocalEulerAngles = LEFTSIDE_Cam.transform.localEulerAngles;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.forward, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.LeftCam.LocalEulerAngles = Rotate(LEFTSIDE_Cam, LEFTSIDE_Cam.transform.parent.up, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.FlexibleSpace();
                 }
+                #endregion
+                #region Rearview Mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
+                {
+                    GUILayout.FlexibleSpace();
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.forward, -_rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.right, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.forward, _rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.up, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            REARVIEW_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).RearviewCam.LocalEulerAngles;
+                            _currentCar.RearviewCam.LocalEulerAngles = REARVIEW_Cam.transform.localEulerAngles;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.up, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RearviewCam.LocalEulerAngles = Rotate(REARVIEW_Cam, REARVIEW_Cam.transform.parent.right, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.FlexibleSpace();
+                }
+                #endregion
+                #region Right side mirror
+                using (var virtical1 = new GUILayout.VerticalScope("box"))
+                {
+                    GUILayout.FlexibleSpace();
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("(", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.right, -_rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.up, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton(")", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.right, _rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.forward, _rotationFactor, Space.World);
+                        }
+                        if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            var revert = VirtualMirror.CreateData(VirtualMirror.VERSION);
+                            RIGHTSIDE_Cam.transform.localEulerAngles = revert.Cars.Find(x => x.Name == _currentCar.Name).RightCam.LocalEulerAngles;
+                            _currentCar.RightCam.LocalEulerAngles = RIGHTSIDE_Cam.transform.localEulerAngles;
+                        }
+                        if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.forward, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    using (var horizontal2 = new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                        {
+                            _currentCar.RightCam.LocalEulerAngles = Rotate(RIGHTSIDE_Cam, RIGHTSIDE_Cam.transform.parent.up, -_rotationFactor, Space.World);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    GUILayout.FlexibleSpace();
+                }
+                #endregion
+            }
+            #endregion
 
-                GUILayout.Label("Side mirror resolution", labelStyle);
-                using (var scope = new GUILayout.HorizontalScope())
+            #region Label Min draw distance
+            using (var scope = new GUILayout.HorizontalScope())
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    _selectTextureResolution = GUILayout.SelectionGrid(_selectTextureResolution, sideResolutionText, 4);
-                    int width = 0;
-                    if (_selectTextureResolution == 0)
+                    GUILayout.BeginVertical();
                     {
-                        width = 64;
+                        GUILayout.Label("Min draw distance", labelStyle);
                     }
-                    else if (_selectTextureResolution == 1)
-                    {
-                        width = 128;
-                    }
-                    else if (_selectTextureResolution == 2)
-                    {
-                        width = 256;
-                    }
-                    else
-                    {
-                        width = 512;
-                    }
-                    VirtualMirror.Settings.SideMirrorsRenderTextureWidth = width;
-                    VirtualMirror.Settings.SideMirrorsRenderTextureHeight = width *1 ;
-                    VirtualMirror.LeftRenderTexture =
-                        new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                    VirtualMirror.RightRenderTexture =
-                        new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                    VirtualMirror.LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.LeftRenderTexture;
-                    VirtualMirror.RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RightRenderTexture;
-                    VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.LeftRenderTexture;
-                    VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RightRenderTexture;
+                    GUILayout.EndVertical();
                 }
+            }
+            #endregion
 
-                GUILayout.Label("Rearview mirror resolution", labelStyle);
-                using (var scope = new GUILayout.HorizontalScope())
+            #region Slider Min draw distance
+            using (var horizontal1 = new GUILayout.HorizontalScope())
+            {
+                using (var horizontal2 = new GUILayout.HorizontalScope())
                 {
-                    _selectTextureResolution = GUILayout.SelectionGrid(_selectTextureResolution, rearviewResolutionText, 4);
-                    int width = 0;
-                    if (_selectTextureResolution == 0)
-                    {
-                        width = 64;
-                    }
-                    else if (_selectTextureResolution == 1)
-                    {
-                        width = 128;
-                    }
-                    else if (_selectTextureResolution == 2)
-                    {
-                        width = 256;
-                    }
-                    else
-                    {
-                        width = 512;
-                    }
-                    VirtualMirror.Settings.RearviewMirrorsRenderTextureWidth = width;
-                    VirtualMirror.Settings.RearviewMirrorsRenderTextureHeight = width * 4;
-                    VirtualMirror.RearviewRenderTexture =
-                        new RenderTexture(VirtualMirror.Settings.RearviewMirrorsRenderTextureWidth, VirtualMirror.Settings.RearviewMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                    VirtualMirror.REARVIEW_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RearviewRenderTexture;
-                    VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RearviewRenderTexture;
+                    LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                    LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                    _currentCar.LeftCam.NearClipPlane = LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
                 }
+                using (var horizontal2 = new GUILayout.HorizontalScope())
+                {
+                    REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(REARVIEW_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                    REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(REARVIEW_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                    _currentCar.RearviewCam.NearClipPlane = REARVIEW_Cam.GetComponent<Camera>().nearClipPlane;
+                }
+                using (var horizontal2 = new GUILayout.HorizontalScope())
+                {
+                    RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                    RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                    _currentCar.RightCam.NearClipPlane = RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
+                }
+            }
+            #endregion
+
+            #region Label FOV
+            using (var scope = new GUILayout.HorizontalScope())
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    GUILayout.BeginVertical();
+                    {
+                        GUILayout.Label("FOV", labelStyle);
+                    }
+                    GUILayout.EndVertical();
+                }
+            }
+            #endregion
+
+            #region Slider FOV
+            using (var horizontal1 = new GUILayout.HorizontalScope())
+            {
+                using (var horizontal2 = new GUILayout.HorizontalScope())
+                {
+                    LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                    LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                    _currentCar.LeftCam.FieldOfView = LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView;
+                }
+                using (var horizontal2 = new GUILayout.HorizontalScope())
+                {
+                    REARVIEW_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(REARVIEW_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                    REARVIEW_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(REARVIEW_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                    _currentCar.RearviewCam.FieldOfView = REARVIEW_Cam.GetComponent<Camera>().fieldOfView;
+                }
+                using (var horizontal2 = new GUILayout.HorizontalScope())
+                {
+                    RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                    RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                    _currentCar.RightCam.FieldOfView = RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView;
+                }
+            }
+            #endregion
+
+            GUILayout.Label("Max draw distance", labelStyle);
+            using (var scope = new GUILayout.HorizontalScope())
+            {
+                VirtualMirror.Settings.FarClipPlane = int.Parse(GUILayout.TextField(VirtualMirror.Settings.FarClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                VirtualMirror.Settings.FarClipPlane = (int)GUILayout.HorizontalSlider(VirtualMirror.Settings.FarClipPlane, 1, 1000);
+                VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
+                VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
+                VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
             }
 
             if (GUILayout.Button("Close"))
