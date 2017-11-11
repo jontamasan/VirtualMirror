@@ -33,8 +33,11 @@ namespace VirtualMirror
     {
         [System.Xml.Serialization.XmlElement("MinRenderingDistance")]
         public float NearClipPlane { get; set; }
+        [System.Xml.Serialization.XmlElement("FOV")]
         public float FieldOfView { get; set; }
+        [System.Xml.Serialization.XmlElement("Position")]
         public Vector3 LocalPosition { get; set; }
+        [System.Xml.Serialization.XmlElement("Rotation")]
         public Vector3 LocalEulerAngles { get; set; }
     }
 }

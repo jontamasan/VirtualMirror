@@ -567,7 +567,7 @@ namespace VirtualMirror
             settings.FarClipPlane = 100;
             settings.RenderTextureDepth = 16;
             settings.SideMirrorsRenderTextureWidth = 256;
-            settings.SideMirrorsRenderTextureHeight = 256 + 16;
+            settings.SideMirrorsRenderTextureHeight = 256;
             settings.RearviewMirrorsRenderTextureWidth = 1024;
             settings.RearviewMirrorsRenderTextureHeight = 256;
 
@@ -676,7 +676,7 @@ namespace VirtualMirror
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(0.5f, 0, 0.5f),
-                    LocalEulerAngles = new Vector3(0, 250, 270),
+                    LocalEulerAngles = new Vector3(-5, 258, 270),
                     NearClipPlane = 0.2f,
                     FieldOfView = 30
                 },
@@ -684,13 +684,13 @@ namespace VirtualMirror
                 {
                     LocalPosition = new Vector3(0, 0.8f, 0),
                     LocalEulerAngles = new Vector3(0, 180, 0),
-                    NearClipPlane = 1.9f,
+                    NearClipPlane = 2.3f,
                     FieldOfView = 20
                 },
                 LeftCam = new Cam
                 {
                     LocalPosition = new Vector3(0.5f, 0, 0.5f), // z,x,y
-                    LocalEulerAngles = new Vector3(6, 250, 270), // ,,y
+                    LocalEulerAngles = new Vector3(5, 258, 270), // ,,y
                     NearClipPlane = 0.2f,
                     FieldOfView = 30
                 }
