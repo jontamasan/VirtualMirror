@@ -437,8 +437,8 @@ namespace VirtualMirror
                 LEFTSIDE_Cam = CreateVitualMirrorCam("LEFTSIDE_Cam", LeftRenderTexture, Settings.FarClipPlane);
 
                 RearviewRenderTexture = new RenderTexture(
-                    Settings.RearviewMirrorsRenderTextureWidth,
-                    Settings.RearviewMirrorsRenderTextureHeight,
+                    Settings.RearviewMirrorRenderTextureWidth,
+                    Settings.RearviewMirrorRenderTextureHeight,
                     Settings.RenderTextureDepth
                     );
                 REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", RearviewRenderTexture, Settings.FarClipPlane);
@@ -586,8 +586,10 @@ namespace VirtualMirror
             settings.RenderTextureDepth = 24;
             settings.SideMirrorsRenderTextureWidth = 256;
             settings.SideMirrorsRenderTextureHeight = 256;
-            settings.RearviewMirrorsRenderTextureWidth = 1024;
-            settings.RearviewMirrorsRenderTextureHeight = 256;
+            settings.RearviewMirrorRenderTextureWidth = 1024;
+            settings.RearviewMirrorRenderTextureHeight = 256;
+            settings.SideMirrorsSelectionGrid = 2;
+            settings.RearviewMirrorSelectionGrid = 2;
 
             Cars this_car = new Cars
             {
