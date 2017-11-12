@@ -15,8 +15,6 @@ namespace VirtualMirror
         private static int _tabInt = 0;
         private static int _prevSelectedSide = VirtualMirror.Settings.SideMirrorsSelectionGrid;
         private static int _prevSelectedRear = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
-        private static int _selectSideTextureResolution = VirtualMirror.Settings.SideMirrorsSelectionGrid;
-        private static int _selectRearviewTextureResolution = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
         private string[] _tabName = { "Camera Settings", "Ovarall Settings" };
         private string[] _sideResolutionText = { "64", "128", "256", "512" };
         private string[] _rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
@@ -519,20 +517,20 @@ namespace VirtualMirror
                         VirtualMirror.IsGuiRightMirrorEnabled)
                     {
                         GUI.enabled = true;
-                        _selectSideTextureResolution = GUILayout.SelectionGrid(_selectSideTextureResolution, _sideResolutionText, 4);
-                        if (_prevSelectedSide != _selectSideTextureResolution)
+                        VirtualMirror.Settings.SideMirrorsSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
+                        if (_prevSelectedSide != VirtualMirror.Settings.SideMirrorsSelectionGrid)
                         {
-                            _prevSelectedSide = _selectSideTextureResolution;
+                            _prevSelectedSide = VirtualMirror.Settings.SideMirrorsSelectionGrid;
                             int width = 0;
-                            if (_selectSideTextureResolution == 0)
+                            if (VirtualMirror.Settings.SideMirrorsSelectionGrid == 0)
                             {
                                 width = 64;
                             }
-                            else if (_selectSideTextureResolution == 1)
+                            else if (VirtualMirror.Settings.SideMirrorsSelectionGrid == 1)
                             {
                                 width = 128;
                             }
-                            else if (_selectSideTextureResolution == 2)
+                            else if (VirtualMirror.Settings.SideMirrorsSelectionGrid == 2)
                             {
                                 width = 256;
                             }
@@ -560,7 +558,7 @@ namespace VirtualMirror
                     else
                     {
                         GUI.enabled = false;
-                        GUILayout.SelectionGrid(_selectSideTextureResolution, _sideResolutionText, 4);
+                        GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
                     }
                 }
 
@@ -570,20 +568,20 @@ namespace VirtualMirror
                     if (VirtualMirror.IsGuiRearviewMirrorEnabled)
                     {
                         GUI.enabled = true;
-                        _selectRearviewTextureResolution = GUILayout.SelectionGrid(_selectRearviewTextureResolution, _rearviewResolutionText, 4);
-                        if (_prevSelectedRear != _selectRearviewTextureResolution)
+                        VirtualMirror.Settings.RearviewMirrorSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.RearviewMirrorSelectionGrid, _rearviewResolutionText, 4);
+                        if (_prevSelectedRear != VirtualMirror.Settings.RearviewMirrorSelectionGrid)
                         {
-                            _prevSelectedRear = _selectRearviewTextureResolution;
+                            _prevSelectedRear = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
                             int height = 0;
-                            if (_selectRearviewTextureResolution == 0)
+                            if (VirtualMirror.Settings.RearviewMirrorSelectionGrid == 0)
                             {
                                 height = 64;
                             }
-                            else if (_selectRearviewTextureResolution == 1)
+                            else if (VirtualMirror.Settings.RearviewMirrorSelectionGrid == 1)
                             {
                                 height = 128;
                             }
-                            else if (_selectRearviewTextureResolution == 2)
+                            else if (VirtualMirror.Settings.RearviewMirrorSelectionGrid == 2)
                             {
                                 height = 256;
                             }
@@ -605,7 +603,7 @@ namespace VirtualMirror
                     else
                     {
                         GUI.enabled = false;
-                        GUILayout.SelectionGrid(_selectRearviewTextureResolution, _rearviewResolutionText, 4);
+                        GUILayout.SelectionGrid(VirtualMirror.Settings.RearviewMirrorSelectionGrid, _rearviewResolutionText, 4);
                     }
                 }
             }

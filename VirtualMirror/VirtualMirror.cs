@@ -449,7 +449,7 @@ namespace VirtualMirror
                 Vector3 rearview_scale = new Vector3(10, 3, 0);
                 Vector3 sidemirror_scale = new Vector3(6, 4, 0);
                 Vector3 rearview_mirror_position = new Vector3(0, 8.8f, 0);
-                Vector3 right_mirror_position = new Vector3(14.5f, 8.3f, 0);
+                Vector3 right_mirror_position = new Vector3(14.5f, 8.3f, 0); // default by 16:9
                 Vector3 left_mirror_position = new Vector3(-14.5f, 8.3f, 0);
                 float res = (float)Screen.width / (float)Screen.height;
                 if (Math.Abs(res - (16f / 9f)) < 0.1f)
@@ -460,8 +460,8 @@ namespace VirtualMirror
                 else if (Math.Abs(res - (16f / 10f)) < 0.1f)
                 {
                     //ModConsole.Print("16:10");
-                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
-                    left_mirror_position = new Vector3(-13.8f, 8.3f, 0);
+                    right_mirror_position = new Vector3(12.7f, 8.3f, 0);
+                    left_mirror_position = new Vector3(-12.8f, 8.3f, 0);
                 }
                 else if (Math.Abs(res - (4f / 3f)) < 0.1f)
                 {

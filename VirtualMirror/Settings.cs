@@ -7,7 +7,7 @@ namespace VirtualMirror
     public class Settings
     {
         public string Version { get; set; }
-        [System.Xml.Serialization.XmlElement("MaxRenderingDistance")]
+        [System.Xml.Serialization.XmlElement("MaxDrawDistance")]
         public int FarClipPlane { get; set; }
         public int RenderTextureDepth { get; set; }
         public int SideMirrorsSelectionGrid { get; set; }
@@ -35,7 +35,7 @@ namespace VirtualMirror
     {
         [System.Xml.Serialization.XmlElement("FOV")]
         public float FieldOfView { get; set; }
-        [System.Xml.Serialization.XmlElement("MinRenderingDistance")]
+        [System.Xml.Serialization.XmlElement("MinDrawDistance")]
         public float NearClipPlane { get; set; }
         [System.Xml.Serialization.XmlElement("Position")]
         public Vector3 LocalPosition { get; set; }
