@@ -446,34 +446,46 @@ namespace VirtualMirror
                     );
                 REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", RearviewRenderTexture, Settings.FarClipPlane);
 
-                Vector3 rearview_scale = new Vector3(10, 3, 0);
-                Vector3 sidemirror_scale = new Vector3(6, 4, 0);
-                Vector3 rearview_mirror_position = new Vector3(0, 8.8f, 0);
-                Vector3 right_mirror_position = new Vector3(14.5f, 8.3f, 0); // default by 16:9
-                Vector3 left_mirror_position = new Vector3(-14.5f, 8.3f, 0);
+                Vector2 rearview_scale = new Vector2(10, 3);
+                Vector2 sidemirror_scale = new Vector2(6, 4);
                 float res = (float)Screen.width / (float)Screen.height;
                 if (Math.Abs(res - (16f / 9f)) < 0.1f)
                 {
-                    //ModConsole.Print("16:9");
-                    // default
+                    if (Settings.ScreenResolution != res)
+                    {
+                        Settings.ScreenResolution = res;
+                        Settings.RightVirtualMirrorPosition = new Vector2(14.5f, 8.3f);
+                        Settings.LeftVirtualMirrorPosition = new Vector2(-14.5f, 8.3f);
+                    }
+
                 }
                 else if (Math.Abs(res - (16f / 10f)) < 0.1f)
                 {
-                    //ModConsole.Print("16:10");
-                    right_mirror_position = new Vector3(12.7f, 8.3f, 0);
-                    left_mirror_position = new Vector3(-12.8f, 8.3f, 0);
+                    if (Settings.ScreenResolution != res)
+                    {
+                        Settings.ScreenResolution = res;
+                        Settings.RightVirtualMirrorPosition = new Vector2(12.8f, 8.3f);
+                        Settings.LeftVirtualMirrorPosition = new Vector2(-12.8f, 8.3f);
+                    }
                 }
                 else if (Math.Abs(res - (4f / 3f)) < 0.1f)
                 {
-                    //ModConsole.Print("4:3");
-                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
-                    left_mirror_position = new Vector3(-12, 8.3f, 0);
+                    if (Settings.ScreenResolution != res)
+                    {
+                        Settings.ScreenResolution = res;
+                        Settings.RightVirtualMirrorPosition = new Vector2(9.25f, 8.3f);
+                        Settings.LeftVirtualMirrorPosition = new Vector2(-9.25f, 8.3f);
+                    }
                 }
                 else if (Math.Abs(res - (3f / 2f)) < 0.1f)
                 {
-                    //ModConsole.Print("3:2");
-                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
-                    left_mirror_position = new Vector3(-12, 8.3f, 0);
+                    // eg: 720*480
+                    if (Settings.ScreenResolution != res)
+                    {
+                        Settings.ScreenResolution = res;
+                        Settings.RightVirtualMirrorPosition = new Vector2(11.75f, 8.3f);
+                        Settings.LeftVirtualMirrorPosition = new Vector2(-11.75f, 8.3f);
+                    }
                 }
                 else
                 {
@@ -485,25 +497,33 @@ namespace VirtualMirror
                         RIGHTSIDE_Mirror.transform.localPosition -= new Vector3(0.05f, 0);
                         view_point = Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
                     }*/
-                    right_mirror_position = new Vector3(14.5f, 8.3f, 0);
-                    left_mirror_position = new Vector3(12, 8.5f, 0);
+                    if (Settings.ScreenResolution != res)
+                    {
+                        Settings.ScreenResolution = res;
+                        Settings.RightVirtualMirrorPosition = new Vector2(10, 8.3f);
+                        Settings.LeftVirtualMirrorPosition = new Vector2(-10, 8.3f);
+                    }
                 }
 
+                
+                ModConsole.Print(Settings.RightVirtualMirrorPosition);
                 RIGHTSIDE_Mirror = CreateVirtualMirror(
                     "RightVirtualMirror",
-                    right_mirror_position,
+                    Settings.RightVirtualMirrorPosition,
                     sidemirror_scale,
                     RightRenderTexture
                     );
                 LEFTSIDE_Mirror = CreateVirtualMirror(
                     "LeftVirtualMirror",
-                    left_mirror_position,
+                    Settings.LeftVirtualMirrorPosition,
                     sidemirror_scale,
                     LeftRenderTexture
                     );
+
+                Settings.RearVirtualMirrorPosition = new Vector2(0, 8.8f);
                 REARVIEW_Mirror = CreateVirtualMirror(
                     "RearviewVirtualMirror",
-                    rearview_mirror_position,
+                    Settings.RearVirtualMirrorPosition,
                     rearview_scale,
                     RearviewRenderTexture);
 #if DEBUG

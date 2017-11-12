@@ -7,6 +7,13 @@ namespace VirtualMirror
     public class Settings
     {
         public string Version { get; set; }
+        public float ScreenResolution { get; set; }
+        public Vector2 LeftVirtualMirrorScale { get; set; }
+        public Vector2 RearVirtualMirrorScale { get; set; }
+        public Vector2 RightVirtualMirrorScale { get; set; }
+        public Vector2 LeftVirtualMirrorPosition { get; set; }
+        public Vector2 RearVirtualMirrorPosition { get; set; }
+        public Vector2 RightVirtualMirrorPosition { get; set; }
         [System.Xml.Serialization.XmlElement("MaxDrawDistance")]
         public int FarClipPlane { get; set; }
         public int RenderTextureDepth { get; set; }
