@@ -12,13 +12,9 @@ namespace VirtualMirror
         public int RenderTextureDepth { get; set; }
         public int SideMirrorsSelectionGrid { get; set; }
         public int RearviewMirrorSelectionGrid { get; set; }
-        [System.Xml.Serialization.XmlIgnore]
         public int SideMirrorsRenderTextureWidth { get; set; }
-        [System.Xml.Serialization.XmlIgnore]
         public int SideMirrorsRenderTextureHeight { get; set; }
-        [System.Xml.Serialization.XmlIgnore]
         public int RearviewMirrorRenderTextureWidth { get; set; }
-        [System.Xml.Serialization.XmlIgnore]
         public int RearviewMirrorRenderTextureHeight { get; set; }
 
         [System.Xml.Serialization.XmlElement("Car")]

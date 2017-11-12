@@ -515,82 +515,99 @@ namespace VirtualMirror
                 GUILayout.Label("Side mirror resolution", labelStyle);
                 using (new GUILayout.HorizontalScope())
                 {
-                    _selectSideTextureResolution = GUILayout.SelectionGrid(_selectSideTextureResolution, _sideResolutionText, 4);
-                    if (_prevSelectedSide != _selectSideTextureResolution)
+                    if (VirtualMirror.IsGuiLeftMirrorEnabled &&
+                        VirtualMirror.IsGuiRightMirrorEnabled)
                     {
-                        ModConsole.Print("tama");
-                        _prevSelectedSide = _selectSideTextureResolution;
-                        int width = 0;
-                        if (_selectSideTextureResolution == 0)
+                        GUI.enabled = true;
+                        _selectSideTextureResolution = GUILayout.SelectionGrid(_selectSideTextureResolution, _sideResolutionText, 4);
+                        if (_prevSelectedSide != _selectSideTextureResolution)
                         {
-                            width = 64;
+                            _prevSelectedSide = _selectSideTextureResolution;
+                            int width = 0;
+                            if (_selectSideTextureResolution == 0)
+                            {
+                                width = 64;
+                            }
+                            else if (_selectSideTextureResolution == 1)
+                            {
+                                width = 128;
+                            }
+                            else if (_selectSideTextureResolution == 2)
+                            {
+                                width = 256;
+                            }
+                            else
+                            {
+                                width = 512;
+                            }
+                            VirtualMirror.Settings.SideMirrorsRenderTextureWidth = VirtualMirror.Settings.SideMirrorsRenderTextureHeight = width;
+                            VirtualMirror.LeftRenderTexture =
+                                new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
+                            VirtualMirror.RightRenderTexture =
+                                new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
+                            if (VirtualMirror.IsGuiLeftMirrorEnabled)
+                            {
+                                VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.LeftRenderTexture;
+                                VirtualMirror.LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.LeftRenderTexture;
+                            }
+                            if (VirtualMirror.IsGuiRightMirrorEnabled)
+                            {
+                                VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RightRenderTexture;
+                                VirtualMirror.RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RightRenderTexture;
+                            }
                         }
-                        else if (_selectSideTextureResolution == 1)
-                        {
-                            width = 128;
-                        }
-                        else if (_selectSideTextureResolution == 2)
-                        {
-                            width = 256;
-                        }
-                        else
-                        {
-                            width = 512;
-                        }
-                        VirtualMirror.Settings.SideMirrorsRenderTextureWidth = VirtualMirror.Settings.SideMirrorsRenderTextureHeight = width;
-                        VirtualMirror.LeftRenderTexture =
-                            new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                        VirtualMirror.RightRenderTexture =
-                            new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                        //if (VirtualMirror.IsGuiLeftMirrorEnabled)
-                        //{
-                        //    VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.LeftRenderTexture;
-                        //    VirtualMirror.LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.LeftRenderTexture;
-                        //}
-                        //if (VirtualMirror.IsGuiRightMirrorEnabled)
-                        //{
-                        //    VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RightRenderTexture;
-                        //    VirtualMirror.RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RightRenderTexture;
-                        //}
+                    }
+                    else
+                    {
+                        GUI.enabled = false;
+                        GUILayout.SelectionGrid(_selectSideTextureResolution, _sideResolutionText, 4);
                     }
                 }
 
                 GUILayout.Label("Rearview mirror resolution", labelStyle);
                 using (var scope = new GUILayout.HorizontalScope())
                 {
-                    _selectRearviewTextureResolution = GUILayout.SelectionGrid(_selectRearviewTextureResolution, _rearviewResolutionText, 4);
-                    if (_prevSelectedRear != _selectRearviewTextureResolution)
+                    if (VirtualMirror.IsGuiRearviewMirrorEnabled)
                     {
-                        _prevSelectedRear = _selectRearviewTextureResolution;
-                        int height = 0;
-                        if (_selectRearviewTextureResolution == 0)
+                        GUI.enabled = true;
+                        _selectRearviewTextureResolution = GUILayout.SelectionGrid(_selectRearviewTextureResolution, _rearviewResolutionText, 4);
+                        if (_prevSelectedRear != _selectRearviewTextureResolution)
                         {
-                            height = 64;
+                            _prevSelectedRear = _selectRearviewTextureResolution;
+                            int height = 0;
+                            if (_selectRearviewTextureResolution == 0)
+                            {
+                                height = 64;
+                            }
+                            else if (_selectRearviewTextureResolution == 1)
+                            {
+                                height = 128;
+                            }
+                            else if (_selectRearviewTextureResolution == 2)
+                            {
+                                height = 256;
+                            }
+                            else
+                            {
+                                height = 512;
+                            }
+                            VirtualMirror.Settings.RearviewMirrorRenderTextureHeight = height;
+                            VirtualMirror.Settings.RearviewMirrorRenderTextureWidth = height * 4;
+                            VirtualMirror.RearviewRenderTexture =
+                                new RenderTexture(VirtualMirror.Settings.RearviewMirrorRenderTextureWidth, VirtualMirror.Settings.RearviewMirrorRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
+                            if (VirtualMirror.IsGuiRearviewMirrorEnabled)
+                            {
+                                VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RearviewRenderTexture;
+                                VirtualMirror.REARVIEW_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RearviewRenderTexture;
+                            }
                         }
-                        else if (_selectRearviewTextureResolution == 1)
-                        {
-                            height = 128;
-                        }
-                        else if (_selectRearviewTextureResolution == 2)
-                        {
-                            height = 256;
-                        }
-                        else
-                        {
-                            height = 512;
-                        }
-                        VirtualMirror.Settings.RearviewMirrorRenderTextureHeight = height;
-                        VirtualMirror.Settings.RearviewMirrorRenderTextureWidth = height * 4;
-                        VirtualMirror.RearviewRenderTexture =
-                            new RenderTexture(VirtualMirror.Settings.RearviewMirrorRenderTextureWidth, VirtualMirror.Settings.RearviewMirrorRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                        //if (VirtualMirror.IsGuiRearviewMirrorEnabled)
-                        //{
-                        //    VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RearviewRenderTexture;
-                        //    VirtualMirror.REARVIEW_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RearviewRenderTexture;
-                        //}
+                    }
+                    else
+                    {
+                        GUI.enabled = false;
+                        GUILayout.SelectionGrid(_selectRearviewTextureResolution, _rearviewResolutionText, 4);
                     }
                 }
-
             }
 
             GUI.enabled = true;

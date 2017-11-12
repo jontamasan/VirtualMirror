@@ -406,12 +406,15 @@ namespace VirtualMirror
 
         private void SetDeactiveAll()
         {
-            RIGHTSIDE_Cam.SetActive(false);
-            REARVIEW_Cam.SetActive(false);
             LEFTSIDE_Cam.SetActive(false);
+            REARVIEW_Cam.SetActive(false);
+            RIGHTSIDE_Cam.SetActive(false);
+            LEFTSIDE_Mirror.SetActive(false);
             RIGHTSIDE_Mirror.SetActive(false);
             REARVIEW_Mirror.SetActive(false);
-            LEFTSIDE_Mirror.SetActive(false);
+            IsGuiLeftMirrorEnabled = false;
+            IsGuiRightMirrorEnabled = false;
+            IsGuiRearviewMirrorEnabled = false;
         }
 
         private bool Initialize()
