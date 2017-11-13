@@ -16,7 +16,7 @@ namespace VirtualMirror
         private static int _prevSelectedRear = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
         private string[] _sideResolutionText = { "64", "128", "256", "512" };
         private string[] _rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
-        private string[] _tabName = {"Virtual Mirrors Position", "Camera Settings", "Ovarall Settings" };
+        private string[] _tabName = {"Virtual Mirror Settings", "Camera Settings", "Ovarall Settings" };
         private bool _guiToggleUpdate;
         private static bool _prevLeftMirrorEnabled = VirtualMirror.IsGuiLeftMirrorEnabled;
         private static bool _prevRightMirrorEnabled = VirtualMirror.IsGuiRightMirrorEnabled;
@@ -30,7 +30,8 @@ namespace VirtualMirror
             labelStyle.fontStyle = FontStyle.Bold;
             labelStyle.normal.textColor = Color.gray;
 
-            using (new GUILayout.HorizontalScope())
+            #region mirror toggle switch
+            using (new GUILayout.HorizontalScope("box"))
             {
                 GUILayout.FlexibleSpace();
                 VirtualMirror.IsGuiLeftMirrorEnabled = GUILayout.Toggle(VirtualMirror.IsGuiLeftMirrorEnabled, "Left mirror");
@@ -85,7 +86,6 @@ namespace VirtualMirror
                 }
                 if (_guiToggleUpdate)
                 {
-                    ModConsole.Print("neko");
                     if (VirtualMirror.LEFTSIDE_Mirror.activeSelf && VirtualMirror.RIGHTSIDE_Mirror.activeSelf && VirtualMirror.REARVIEW_Mirror.activeSelf)
                     {
                         _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Left + (int)VirtualMirror.MirrorsNum.Right + (int)VirtualMirror.MirrorsNum.Center;
@@ -122,6 +122,9 @@ namespace VirtualMirror
                 }
                 GUILayout.FlexibleSpace();
             }
+            #endregion
+
+            GUILayout.Space(10);
 
             _tabInt = GUILayout.Toolbar(_tabInt, _tabName);
             if (_tabInt == 0)
@@ -687,7 +690,7 @@ namespace VirtualMirror
                         }
                         else
                         {
-                            GUILayout.TextField("", GUILayout.MaxWidth(40));
+                            GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             GUILayout.HorizontalSlider(1, 1, 100);
                         }
                     }
@@ -709,7 +712,7 @@ namespace VirtualMirror
                         }
                         else
                         {
-                            GUILayout.TextField("", GUILayout.MaxWidth(40));
+                            GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             GUILayout.HorizontalSlider(1, 1, 100);
                         }
                     }

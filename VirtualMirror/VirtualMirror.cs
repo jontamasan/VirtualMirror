@@ -152,10 +152,11 @@ namespace VirtualMirror
                 }
                 else
                 {
-                    IsPlayerInMenu.Value = true;
                     IsGuiActive = true;
+                    IsPlayerInMenu.Value = true;
                 }
             }
+
             // activate once if player is boarded a car
             if (cars.Length != 0 && _isPlayerBoarded ||
                 cars.Length != 0 && virtualMirrorKey.IsDown() )
@@ -301,6 +302,8 @@ namespace VirtualMirror
                     serializer.Serialize(fs, Settings, ns);
                 }
 
+                IsGuiActive = false;
+                IsPlayerInMenu.Value = false;
                 _isPlayerBoarded = true;
             }
         }
