@@ -10,10 +10,13 @@ namespace VirtualMirror
         private float _buttonWidth = 40;
         private float _rotationFactor = 0.25f;
         private float _translateFactor = 0.02f;
-        private Vector2 _positionVirticalFactor = new Vector2(0, 0.05f);
+        private Vector2 _scaleVerticalFactor = new Vector2(0, 0.05f);
+        private Vector2 _scaleHorizontalFactor = new Vector2(0.05f, 0);
+        private Vector2 _positionVerticalFactor = new Vector2(0, 0.05f);
         private Vector2 _positionHorizontalFactor = new Vector2(0.05f, 0);
         private static int _prevSelectedSide = VirtualMirror.Settings.SideMirrorsSelectionGrid;
         private static int _prevSelectedRear = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
+        private string _textPreserveAspectRatio = "fixed aspect ratio";
         private string[] _sideResolutionText = { "64", "128", "256", "512" };
         private string[] _rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
         private string[] _tabName = {"Virtual Mirror Settings", "Camera Settings", "Ovarall Settings" };
@@ -21,6 +24,9 @@ namespace VirtualMirror
         private static bool _prevLeftMirrorEnabled = VirtualMirror.IsGuiLeftMirrorEnabled;
         private static bool _prevRightMirrorEnabled = VirtualMirror.IsGuiRightMirrorEnabled;
         private static bool _prevRearviewMirrorEnabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+        private static bool _leftPreserveAspectRatio;
+        private static bool _rearPreserveAspectRatio;
+        private static bool _rightPreserveAspectRatio;
 
         public void DoWindow()
         {
@@ -98,7 +104,7 @@ namespace VirtualMirror
                     {
                         _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Left + (int)VirtualMirror.MirrorsNum.Center;
                     }
-                    else if (VirtualMirror.RIGHTSIDE_Mirror && VirtualMirror.REARVIEW_Mirror.activeSelf)
+                    else if (VirtualMirror.RIGHTSIDE_Mirror.activeSelf && VirtualMirror.REARVIEW_Mirror.activeSelf)
                     {
                         _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Right + (int)VirtualMirror.MirrorsNum.Center;
                     }
@@ -106,13 +112,13 @@ namespace VirtualMirror
                     {
                         _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Left;
                     }
-                    else if (VirtualMirror.RIGHTSIDE_Mirror.activeSelf)
-                    {
-                        _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Right;
-                    }
                     else if (VirtualMirror.REARVIEW_Mirror.activeSelf)
                     {
                         _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Center;
+                    }
+                    else if (VirtualMirror.RIGHTSIDE_Mirror.activeSelf)
+                    {
+                        _currentCar.SwitchMirrorsNum = (int)VirtualMirror.MirrorsNum.Right;
                     }
                     else
                     {
@@ -128,12 +134,14 @@ namespace VirtualMirror
 
             _tabInt = GUILayout.Toolbar(_tabInt, _tabName);
             if (_tabInt == 0)
-            #region TAB Virtual Mirrors Position
+            #region TAB Virtual Mirror Settings
             {
                 GUILayout.Label("Virtual mirror position", labelStyle);
+                #region Virtual mirroros position
                 using (new GUILayout.HorizontalScope())
                 {
                     #region Left side mirror
+                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -142,7 +150,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateLeftVirtualMirrors(_positionVirticalFactor);
+                                TranslateLeftVirtualMirrors(_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -169,7 +177,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateLeftVirtualMirrors(-_positionVirticalFactor);
+                                TranslateLeftVirtualMirrors(-_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -177,6 +185,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Rearview mirror
+                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -185,7 +194,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateRearviewVirtualMirror(_positionVirticalFactor);
+                                TranslateRearviewVirtualMirror(_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -212,7 +221,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateRearviewVirtualMirror(-_positionVirticalFactor);
+                                TranslateRearviewVirtualMirror(-_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -220,6 +229,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Right side mirror
+                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -228,7 +238,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateRightVirtualVirror(_positionVirticalFactor);
+                                TranslateRightVirtualVirror(_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -255,7 +265,7 @@ namespace VirtualMirror
                             GUILayout.FlexibleSpace();
                             if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
                             {
-                                TranslateRightVirtualVirror(-_positionVirticalFactor);
+                                TranslateRightVirtualVirror(-_positionVerticalFactor);
                             }
                             GUILayout.FlexibleSpace();
                         }
@@ -263,18 +273,219 @@ namespace VirtualMirror
                     }
                     #endregion
                 }
+                #endregion
+                GUI.enabled = true;
+                GUILayout.Label("Virtual mirror scalse", labelStyle);
+                #region Virtual mirrors scale
+                using (new GUILayout.HorizontalScope())
+                {
+                    #region Left side mirror
+                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
+                    using (new GUILayout.VerticalScope("box"))
+                    {
+                        GUILayout.FlexibleSpace();
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleLeftVirtualMirrors(_scaleVerticalFactor);
+                                if (_leftPreserveAspectRatio)
+                                {
+                                    ScaleLeftVirtualMirrors(_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleLeftVirtualMirrors(-_scaleHorizontalFactor);
+                                if (_leftPreserveAspectRatio)
+                                {
+                                    ScaleLeftVirtualMirrors(-_scaleVerticalFactor);
+                                }
+                            }
+                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                VirtualMirror.Settings.LeftVirtualMirrorScale = VirtualMirror.DefaultSideVirtualMirrorsScale;
+                                VirtualMirror.LEFTSIDE_Mirror.transform.localScale = VirtualMirror.Settings.LeftVirtualMirrorScale;
+                            }
+                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleLeftVirtualMirrors(_scaleHorizontalFactor);
+                                if (_leftPreserveAspectRatio)
+                                {
+                                    ScaleLeftVirtualMirrors(_scaleVerticalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleLeftVirtualMirrors(-_scaleVerticalFactor);
+                                if (_leftPreserveAspectRatio)
+                                {
+                                    ScaleLeftVirtualMirrors(-_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            _leftPreserveAspectRatio = GUILayout.Toggle(_leftPreserveAspectRatio, _textPreserveAspectRatio);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    #endregion
+                    #region Rearview mirror
+                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+                    using (new GUILayout.VerticalScope("box"))
+                    {
+                        GUILayout.FlexibleSpace();
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRearviewVirtualMirrors(_scaleVerticalFactor);
+                                if (_rearPreserveAspectRatio)
+                                {
+                                    ScaleRearviewVirtualMirrors(_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRearviewVirtualMirrors(-_scaleHorizontalFactor);
+                                if (_rearPreserveAspectRatio)
+                                {
+                                    ScaleRearviewVirtualMirrors(-_scaleVerticalFactor);
+                                }
+                            }
+                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                VirtualMirror.Settings.RearVirtualMirrorScale = VirtualMirror.DefaultRearVirtualMirrorScale;
+                                VirtualMirror.REARVIEW_Mirror.transform.localScale = VirtualMirror.Settings.RearVirtualMirrorScale;
+                            }
+                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRearviewVirtualMirrors(_scaleHorizontalFactor);
+                                if (_rearPreserveAspectRatio)
+                                {
+                                    ScaleRearviewVirtualMirrors(_scaleVerticalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRearviewVirtualMirrors(-_scaleVerticalFactor);
+                                if (_rearPreserveAspectRatio)
+                                {
+                                    ScaleRearviewVirtualMirrors(-_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            _rearPreserveAspectRatio = GUILayout.Toggle(_rearPreserveAspectRatio, _textPreserveAspectRatio);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    #endregion
+                    #region Right side mirror
+                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
+                    using (new GUILayout.VerticalScope("box"))
+                    {
+                        GUILayout.FlexibleSpace();
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("^", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRightVirtualMirrors(_scaleVerticalFactor);
+                                if (_rightPreserveAspectRatio)
+                                {
+                                    ScaleRightVirtualMirrors(_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("<", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRightVirtualMirrors(-_scaleHorizontalFactor);
+                                if (_rightPreserveAspectRatio)
+                                {
+                                    ScaleRightVirtualMirrors(-_scaleVerticalFactor);
+                                }
+                            }
+                            if (GUILayout.RepeatButton("O", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                VirtualMirror.Settings.RightVirtualMirrorScale = VirtualMirror.DefaultSideVirtualMirrorsScale;
+                                VirtualMirror.RIGHTSIDE_Mirror.transform.localScale = VirtualMirror.Settings.RightVirtualMirrorScale;
+                            }
+                            if (GUILayout.RepeatButton(">", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRightVirtualMirrors(_scaleHorizontalFactor);
+                                if (_rightPreserveAspectRatio)
+                                {
+                                    ScaleRightVirtualMirrors(_scaleVerticalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.FlexibleSpace();
+                            if (GUILayout.RepeatButton("v", GUILayout.MaxWidth(_buttonWidth)))
+                            {
+                                ScaleRightVirtualMirrors(-_scaleVerticalFactor);
+                                if (_rightPreserveAspectRatio)
+                                {
+                                    ScaleRightVirtualMirrors(-_scaleHorizontalFactor);
+                                }
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            _rightPreserveAspectRatio = GUILayout.Toggle(_rightPreserveAspectRatio, _textPreserveAspectRatio);
+                        }
+                        GUILayout.FlexibleSpace();
+                    }
+                    #endregion
+                }
+                #endregion
             }
             #endregion
             else if (_tabInt == 1)
             #region TAB Camera Settings
             {
+                GUI.enabled = true;
                 GUILayout.Label("Translate", labelStyle);
 
                 #region TRANLATE
                 using (new GUILayout.HorizontalScope())
                 {
                     #region Left side mirror
-                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiLeftCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -327,7 +538,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Rearview mirror
-                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRearviewCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -380,7 +591,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Right side mirror
-                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRightCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -442,7 +653,7 @@ namespace VirtualMirror
                 using (new GUILayout.HorizontalScope())
                 {
                     #region Left side mirror
-                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiLeftCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -495,7 +706,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Rearview Mirror
-                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRearviewCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -548,7 +759,7 @@ namespace VirtualMirror
                     }
                     #endregion
                     #region Right side mirror
-                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRightCameraEnabled;
                     using (new GUILayout.VerticalScope("box"))
                     {
                         GUILayout.FlexibleSpace();
@@ -621,7 +832,7 @@ namespace VirtualMirror
                 #region Slider Min draw distance
                 using (new GUILayout.HorizontalScope())
                 {
-                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiLeftCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         if (VirtualMirror.IsGuiLeftMirrorEnabled)
@@ -636,14 +847,14 @@ namespace VirtualMirror
                             GUILayout.HorizontalSlider(1, 1, 100);
                         }
                     }
-                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRearviewCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
                         _currentCar.RearviewCam.NearClipPlane = VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane;
                     }
-                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRightCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         if (VirtualMirror.IsGuiRightMirrorEnabled)
@@ -679,7 +890,7 @@ namespace VirtualMirror
                 #region Slider FOV
                 using (new GUILayout.HorizontalScope())
                 {
-                    GUI.enabled = VirtualMirror.IsGuiLeftMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiLeftCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         if (VirtualMirror.IsGuiLeftMirrorEnabled)
@@ -694,14 +905,14 @@ namespace VirtualMirror
                             GUILayout.HorizontalSlider(1, 1, 100);
                         }
                     }
-                    GUI.enabled = VirtualMirror.IsGuiRearviewMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRearviewCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
                         _currentCar.RearviewCam.FieldOfView = VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView;
                     }
-                    GUI.enabled = VirtualMirror.IsGuiRightMirrorEnabled;
+                    GUI.enabled = VirtualMirror.IsGuiRightCameraEnabled;
                     using (new GUILayout.HorizontalScope())
                     {
                         if (VirtualMirror.IsGuiRightMirrorEnabled)
@@ -727,9 +938,9 @@ namespace VirtualMirror
                 GUILayout.Label("Max draw distance", labelStyle);
                 using (new GUILayout.HorizontalScope())
                 {
-                    if (VirtualMirror.IsGuiRightMirrorEnabled ||
-                        VirtualMirror.IsGuiRearviewMirrorEnabled ||
-                        VirtualMirror.IsGuiLeftMirrorEnabled)
+                    if (VirtualMirror.IsGuiLeftCameraEnabled ||
+                        VirtualMirror.IsGuiRightCameraEnabled ||
+                        VirtualMirror.IsGuiRearviewCameraEnabled)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.FarClipPlane = int.Parse(GUILayout.TextField(VirtualMirror.Settings.FarClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
@@ -741,19 +952,19 @@ namespace VirtualMirror
                         GUILayout.TextField("off", GUILayout.MaxWidth(40));
                         GUILayout.HorizontalSlider(1, 1, 10);
                     }
-                    if (VirtualMirror.IsGuiLeftMirrorEnabled)
+                    if (VirtualMirror.IsGuiLeftCameraEnabled)
                         VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    if (VirtualMirror.IsGuiRearviewMirrorEnabled)
+                    if (VirtualMirror.IsGuiRearviewCameraEnabled)
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    if (VirtualMirror.IsGuiRightMirrorEnabled)
+                    if (VirtualMirror.IsGuiRightCameraEnabled)
                         VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
                 }
 
                 GUILayout.Label("Side mirror resolution", labelStyle);
                 using (new GUILayout.HorizontalScope())
                 {
-                    if (VirtualMirror.IsGuiLeftMirrorEnabled &&
-                        VirtualMirror.IsGuiRightMirrorEnabled)
+                    if (VirtualMirror.IsGuiLeftCameraEnabled &&
+                        VirtualMirror.IsGuiRightCameraEnabled)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.SideMirrorsSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
@@ -804,7 +1015,7 @@ namespace VirtualMirror
                 GUILayout.Label("Rearview mirror resolution", labelStyle);
                 using (var scope = new GUILayout.HorizontalScope())
                 {
-                    if (VirtualMirror.IsGuiRearviewMirrorEnabled)
+                    if (VirtualMirror.IsGuiRearviewCameraEnabled)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.RearviewMirrorSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.RearviewMirrorSelectionGrid, _rearviewResolutionText, 4);
@@ -832,11 +1043,8 @@ namespace VirtualMirror
                             VirtualMirror.Settings.RearviewMirrorRenderTextureWidth = height * 4;
                             VirtualMirror.RearviewRenderTexture =
                                 new RenderTexture(VirtualMirror.Settings.RearviewMirrorRenderTextureWidth, VirtualMirror.Settings.RearviewMirrorRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                            if (VirtualMirror.IsGuiRearviewMirrorEnabled)
-                            {
-                                VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RearviewRenderTexture;
-                                VirtualMirror.REARVIEW_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RearviewRenderTexture;
-                            }
+                            VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RearviewRenderTexture;
+                            VirtualMirror.REARVIEW_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RearviewRenderTexture;
                         }
                     }
                     else
@@ -875,6 +1083,24 @@ namespace VirtualMirror
         {
             VirtualMirror.Settings.RearVirtualMirrorPosition += position;
             VirtualMirror.REARVIEW_Mirror.transform.localPosition = VirtualMirror.Settings.RearVirtualMirrorPosition;
+        }
+
+        private void ScaleLeftVirtualMirrors(Vector2 scale)
+        {
+            VirtualMirror.Settings.LeftVirtualMirrorScale += scale;
+            VirtualMirror.LEFTSIDE_Mirror.transform.localScale = VirtualMirror.Settings.LeftVirtualMirrorScale;
+        }
+
+        private void ScaleRightVirtualMirrors(Vector2 scale)
+        {
+            VirtualMirror.Settings.RightVirtualMirrorScale += scale;
+            VirtualMirror.RIGHTSIDE_Mirror.transform.localScale = VirtualMirror.Settings.RightVirtualMirrorScale;
+        }
+
+        private void ScaleRearviewVirtualMirrors(Vector2 scale)
+        {
+            VirtualMirror.Settings.RearVirtualMirrorScale += scale;
+            VirtualMirror.REARVIEW_Mirror.transform.localScale = VirtualMirror.Settings.RearVirtualMirrorScale;
         }
 
         private static Vector3 Rotate(GameObject target, Vector3 axis, float angle, Space relativeTo = Space.Self)

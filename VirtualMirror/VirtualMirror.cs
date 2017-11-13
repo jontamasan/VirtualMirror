@@ -34,6 +34,8 @@ namespace VirtualMirror
         public static RenderTexture RightRenderTexture;
         public static RenderTexture LeftRenderTexture;
         public static RenderTexture RearviewRenderTexture;
+        public static Vector2 DefaultRearVirtualMirrorScale;
+        public static Vector2 DefaultSideVirtualMirrorsScale;
         public static Vector2 DefaultLeftVirtualMirrorPosition;
         public static Vector2 DefaultRearVirtualMirrorPosition;
         public static Vector2 DefaultRightVirtualMirrorPosition;
@@ -41,14 +43,17 @@ namespace VirtualMirror
         public static bool IsGuiActive;
         public static bool IsGuiLeftMirrorEnabled;
         public static bool IsGuiRightMirrorEnabled;
+        public static bool IsGuiLeftCameraEnabled;
+        public static bool IsGuiRightCameraEnabled;
         public static bool IsGuiRearviewMirrorEnabled;
+        public static bool IsGuiRearviewCameraEnabled;
 
         public static Settings Settings;
         public static Cars CurrentCar;
 
         // private valiables
         private const String SETTINGS_FILE_NAME = "settings.xml";
-        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2), 500, 400);
+        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2) + 100, 500, 450);
         private Rect _GUIWindowRect;
         private GameObject _player;
         private bool _isInit = true;
@@ -352,15 +357,17 @@ namespace VirtualMirror
                 mirror_num == (int)MirrorsNum.Center + (int)MirrorsNum.Right ||
                 mirror_num == (int)MirrorsNum.Center + (int)MirrorsNum.Right + (int)MirrorsNum.Left)
             {
-                rearview_mirror.SetActive(true);
                 rearview_cam.SetActive(true);
+                rearview_mirror.SetActive(true);
                 IsGuiRearviewMirrorEnabled = true;
+                IsGuiRearviewCameraEnabled = true;
             }
             else
             {
-                rearview_mirror.SetActive(false);
                 rearview_cam.SetActive(false);
+                rearview_mirror.SetActive(false);
                 IsGuiRearviewMirrorEnabled = false;
+                IsGuiRearviewCameraEnabled = false;
             }
             // rightside
             if (
@@ -370,19 +377,21 @@ namespace VirtualMirror
                 mirror_num == (int)MirrorsNum.Right + (int)MirrorsNum.Center + (int)MirrorsNum.Left)
             {
                 right_mirror.SetActive(true);
+                IsGuiRightMirrorEnabled = true;
                 if (right_cam != null)
                 {
                     right_cam.SetActive(true);
-                    IsGuiRightMirrorEnabled = true;
+                    IsGuiRightCameraEnabled = true;
                 }
             }
             else
             {
                 right_mirror.SetActive(false);
+                IsGuiRightMirrorEnabled = false;
                 if (right_cam != null)
                 {
                     right_cam.SetActive(false);
-                    IsGuiRightMirrorEnabled = false;
+                    IsGuiRightCameraEnabled = false;
                 }
             }
             // leftside
@@ -392,19 +401,21 @@ namespace VirtualMirror
                 mirror_num == (int)MirrorsNum.Left + (int)MirrorsNum.Center + (int)MirrorsNum.Right)
             {
                 left_mirror.SetActive(true);
+                IsGuiLeftMirrorEnabled = true;
                 if (left_cam != null)
                 {
                     left_cam.SetActive(true);
-                    IsGuiLeftMirrorEnabled = true;
+                    IsGuiLeftCameraEnabled = true;
                 }
             }
             else
             {
                 left_mirror.SetActive(false);
+                IsGuiLeftMirrorEnabled = false;
                 if (left_cam != null)
                 {
                     left_cam.SetActive(false);
-                    IsGuiLeftMirrorEnabled = false;
+                    IsGuiLeftCameraEnabled = false;
                 }
             }
         }
@@ -453,9 +464,11 @@ namespace VirtualMirror
                 REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", RearviewRenderTexture, Settings.FarClipPlane);
 
                 // virtual mirror setting
-                Settings.LeftVirtualMirrorScale = new Vector2(6, 4);
-                Settings.RearVirtualMirrorScale = new Vector2(10, 3);
-                Settings.RightVirtualMirrorScale = new Vector2(6, 4);
+                DefaultSideVirtualMirrorsScale = new Vector2(6, 4);
+                DefaultRearVirtualMirrorScale = new Vector2(10, 3);
+                Settings.LeftVirtualMirrorScale = DefaultSideVirtualMirrorsScale;
+                Settings.RearVirtualMirrorScale = DefaultRearVirtualMirrorScale;
+                Settings.RightVirtualMirrorScale = DefaultSideVirtualMirrorsScale;
                 DefaultRearVirtualMirrorPosition = new Vector2(0, 8.8f); // Rearview mirror is not dependence by resolution
                 Settings.RearVirtualMirrorPosition = DefaultRearVirtualMirrorPosition;
                 float res = (float)Screen.width / (float)Screen.height;
@@ -629,8 +642,6 @@ namespace VirtualMirror
             settings.SideMirrorsRenderTextureHeight = 256;
             settings.RearviewMirrorRenderTextureWidth = 1024;
             settings.RearviewMirrorRenderTextureHeight = 256;
-            settings.LeftVirtualMirrorScale = new Vector2(10, 3);
-            settings.RightVirtualMirrorScale = new Vector2(10, 3); ;
 
             Cars this_car = new Cars
             {
