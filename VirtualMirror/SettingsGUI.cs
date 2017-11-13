@@ -49,11 +49,15 @@ namespace VirtualMirror
                     {
                         VirtualMirror.LEFTSIDE_Cam.SetActive(true);
                         VirtualMirror.LEFTSIDE_Mirror.SetActive(true);
+                        VirtualMirror.IsGuiLeftMirrorEnabled = true;
+                        VirtualMirror.IsGuiLeftCameraEnabled = true;
                     }
                     else
                     {
                         VirtualMirror.LEFTSIDE_Cam.SetActive(false);
                         VirtualMirror.LEFTSIDE_Mirror.SetActive(false);
+                        VirtualMirror.IsGuiLeftMirrorEnabled = false;
+                        VirtualMirror.IsGuiLeftCameraEnabled = false;
                     }
                 }
                 GUILayout.FlexibleSpace();
@@ -66,11 +70,15 @@ namespace VirtualMirror
                     {
                         VirtualMirror.REARVIEW_Cam.SetActive(true);
                         VirtualMirror.REARVIEW_Mirror.SetActive(true);
+                        VirtualMirror.IsGuiRearviewMirrorEnabled = true;
+                        VirtualMirror.IsGuiRearviewCameraEnabled = true;
                     }
                     else
                     {
                         VirtualMirror.REARVIEW_Cam.SetActive(false);
                         VirtualMirror.REARVIEW_Mirror.SetActive(false);
+                        VirtualMirror.IsGuiRearviewMirrorEnabled = false;
+                        VirtualMirror.IsGuiRearviewCameraEnabled = false;
                     }
                 }
                 GUILayout.FlexibleSpace();
@@ -83,11 +91,15 @@ namespace VirtualMirror
                     {
                         VirtualMirror.RIGHTSIDE_Cam.SetActive(true);
                         VirtualMirror.RIGHTSIDE_Mirror.SetActive(true);
+                        VirtualMirror.IsGuiRightMirrorEnabled = true;
+                        VirtualMirror.IsGuiRightCameraEnabled = true;
                     }
                     else
                     {
                         VirtualMirror.RIGHTSIDE_Cam.SetActive(false);
                         VirtualMirror.RIGHTSIDE_Mirror.SetActive(false);
+                        VirtualMirror.IsGuiRightMirrorEnabled = false;
+                        VirtualMirror.IsGuiRightCameraEnabled = false;
                     }
                 }
                 if (_guiToggleUpdate)
