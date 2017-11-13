@@ -179,7 +179,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
                         break;
                     case VAN:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
@@ -191,7 +191,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("RightSideMirrorCam").GetComponent<Camera>().targetTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam);
                         break;
                     case SATSUMA:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
@@ -208,7 +208,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case KEKMET:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
@@ -230,7 +230,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = LeftRenderTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     case MUSCLE:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
@@ -247,7 +247,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
                     case BOAT:
                         break;
@@ -273,7 +273,7 @@ namespace VirtualMirror
                             );
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = LeftRenderTexture;
-                        SetActive(CurrentCar.SwitchMirrorsNum, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     default:
 #if DEBUG
@@ -349,13 +349,13 @@ namespace VirtualMirror
             SwitchMirrors.Center;
             SwitchMirrors.RightLeft;
         **********************/
-        public static void SetActive(int mirror_num, GameObject rearview_mirror, GameObject right_mirror, GameObject left_mirror, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
+        public static void SetActive(Cars currentCar, GameObject rearview_mirror, GameObject right_mirror, GameObject left_mirror, GameObject rearview_cam, GameObject right_cam = null, GameObject left_cam = null)
         {
             // rearview
-            if (mirror_num == (int)MirrorsNum.Center ||
-                mirror_num == (int)MirrorsNum.Center + (int)MirrorsNum.Left||
-                mirror_num == (int)MirrorsNum.Center + (int)MirrorsNum.Right ||
-                mirror_num == (int)MirrorsNum.Center + (int)MirrorsNum.Right + (int)MirrorsNum.Left)
+            if (currentCar.SwitchMirrorsNum == (int)MirrorsNum.Center ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Center + (int)MirrorsNum.Left||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Center + (int)MirrorsNum.Right ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Center + (int)MirrorsNum.Right + (int)MirrorsNum.Left)
             {
                 rearview_cam.SetActive(true);
                 rearview_mirror.SetActive(true);
@@ -370,53 +370,107 @@ namespace VirtualMirror
                 IsGuiRearviewCameraEnabled = false;
             }
             // rightside
-            if (
-                mirror_num == (int)MirrorsNum.Right ||
-                mirror_num == (int)MirrorsNum.Right + (int)MirrorsNum.Left ||
-                mirror_num == (int)MirrorsNum.Right + (int)MirrorsNum.Center ||
-                mirror_num == (int)MirrorsNum.Right + (int)MirrorsNum.Center + (int)MirrorsNum.Left)
+            if (currentCar.SwitchMirrorsNum == (int)MirrorsNum.Right ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Right + (int)MirrorsNum.Left ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Right + (int)MirrorsNum.Center ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Right + (int)MirrorsNum.Center + (int)MirrorsNum.Left)
             {
-                right_mirror.SetActive(true);
-                IsGuiRightMirrorEnabled = true;
-                if (right_cam != null)
+                switch (currentCar.Name)
                 {
-                    right_cam.SetActive(true);
-                    IsGuiRightCameraEnabled = true;
+                    case GIFU:
+                    case VAN:
+                        right_mirror.SetActive(true);
+                        break;
+                    case SATSUMA:
+                    case MUSCLE:
+                    case KEKMET:
+                    case RUSCKO:
+                        right_cam.SetActive(true);
+                        right_mirror.SetActive(true);
+                        break;
                 }
+                //IsGuiRightMirrorEnabled = true;
+                //if (right_cam != null)
+                //{
+                //    right_cam.SetActive(true);
+                //    IsGuiRightCameraEnabled = true;
+                //}
             }
             else
             {
-                right_mirror.SetActive(false);
-                IsGuiRightMirrorEnabled = false;
-                if (right_cam != null)
+                switch (currentCar.Name)
                 {
-                    right_cam.SetActive(false);
-                    IsGuiRightCameraEnabled = false;
+                    case VAN:
+                    case GIFU:
+                        right_mirror.SetActive(false);
+                        break;
+                    case MUSCLE:
+                    case SATSUMA:
+                    case KEKMET:
+                    case RUSCKO:
+                        right_cam.SetActive(false);
+                        right_mirror.SetActive(false);
+                        break;
                 }
+                //right_mirror.SetActive(false);
+                //IsGuiRightMirrorEnabled = false;
+                //if (right_cam != null)
+                //{
+                //    right_cam.SetActive(false);
+                //    IsGuiRightCameraEnabled = false;
+                //}
             }
             // leftside
-            if (mirror_num == (int)MirrorsNum.Left ||
-                mirror_num == (int)MirrorsNum.Left + (int)MirrorsNum.Right ||
-                mirror_num == (int)MirrorsNum.Left + (int)MirrorsNum.Center || 
-                mirror_num == (int)MirrorsNum.Left + (int)MirrorsNum.Center + (int)MirrorsNum.Right)
+            if (currentCar.SwitchMirrorsNum == (int)MirrorsNum.Left ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Left + (int)MirrorsNum.Right ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Left + (int)MirrorsNum.Center ||
+                currentCar.SwitchMirrorsNum == (int)MirrorsNum.Left + (int)MirrorsNum.Center + (int)MirrorsNum.Right)
             {
-                left_mirror.SetActive(true);
-                IsGuiLeftMirrorEnabled = true;
-                if (left_cam != null)
+                switch (currentCar.Name)
                 {
-                    left_cam.SetActive(true);
-                    IsGuiLeftCameraEnabled = true;
+                    case VAN:
+                    case GIFU:
+                    case MUSCLE:
+                    case SATSUMA:
+                        left_mirror.SetActive(true);
+                        break;
+                    case KEKMET:
+                    case RUSCKO:
+                        left_cam.SetActive(true);
+                        left_mirror.SetActive(true);
+                        break;
                 }
+                //left_mirror.SetActive(true);
+                //IsGuiLeftMirrorEnabled = true;
+                //if (left_cam != null)
+                //{
+                //    left_cam.SetActive(true);
+                //    IsGuiLeftCameraEnabled = true;
+                //}
             }
             else
             {
-                left_mirror.SetActive(false);
-                IsGuiLeftMirrorEnabled = false;
-                if (left_cam != null)
+                switch (currentCar.Name)
                 {
-                    left_cam.SetActive(false);
-                    IsGuiLeftCameraEnabled = false;
+                    case VAN:
+                    case GIFU:
+                    case MUSCLE:
+                    case SATSUMA:
+                        left_mirror.SetActive(false);
+                        break;
+                    case KEKMET:
+                    case RUSCKO:
+                        left_cam.SetActive(false);
+                        left_mirror.SetActive(false);
+                        break;
                 }
+                //left_mirror.SetActive(false);
+                //IsGuiLeftMirrorEnabled = false;
+                //if (left_cam != null)
+                //{
+                //    left_cam.SetActive(false);
+                //    IsGuiLeftCameraEnabled = false;
+                //}
             }
         }
 
