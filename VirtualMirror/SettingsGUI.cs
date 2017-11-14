@@ -817,8 +817,14 @@ namespace VirtualMirror
                     {
                         if (VirtualMirror.LEFTSIDE_Cam.activeSelf)
                         {
-                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane
+                                =  float.Parse(GUILayout.TextField(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane
+                                    = GUILayout.HorizontalSlider(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0.1f, 10);
+                            }
                             _currentCar.LeftCam.NearClipPlane = VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
                         }
                         else
@@ -831,14 +837,24 @@ namespace VirtualMirror
                             {
                                 GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             }
-                            GUILayout.HorizontalSlider(1, 1, 100);
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                GUILayout.HorizontalSlider(1, 1, 100);
+                            }
                         }
                     }
                     GUI.enabled = VirtualMirror.REARVIEW_Cam.activeSelf;
                     using (new GUILayout.HorizontalScope())
                     {
-                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane
+                            = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                        using (new GUILayout.VerticalScope())
+                        {
+                            GUILayout.Space(5);
+                            VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane
+                                = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane, 0.1f, 10);
+                        }
                         _currentCar.RearviewCam.NearClipPlane = VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().nearClipPlane;
                     }
                     GUI.enabled = VirtualMirror.RIGHTSIDE_Cam.activeSelf;
@@ -846,8 +862,14 @@ namespace VirtualMirror
                     {
                         if (VirtualMirror.RIGHTSIDE_Cam.activeSelf)
                         {
-                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = float.Parse(GUILayout.TextField(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane = GUILayout.HorizontalSlider(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0, 10);
+                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane
+                                = float.Parse(GUILayout.TextField(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane
+                                    = GUILayout.HorizontalSlider(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane, 0.1f, 10);
+                            }
                             _currentCar.RightCam.NearClipPlane = VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().nearClipPlane;
                         }
                         else
@@ -860,7 +882,11 @@ namespace VirtualMirror
                             {
                                 GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             }
-                            GUILayout.HorizontalSlider(1, 1, 100);
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                GUILayout.HorizontalSlider(1, 1, 100);
+                            }
                         }
                     }
                 }
@@ -889,8 +915,14 @@ namespace VirtualMirror
                     {
                         if (VirtualMirror.LEFTSIDE_Cam.activeSelf)
                         {
-                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                            VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView
+                                = float.Parse(GUILayout.TextField(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView
+                                    = GUILayout.HorizontalSlider(VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                            }
                             _currentCar.LeftCam.FieldOfView = VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().fieldOfView;
                         }
                         else
@@ -903,14 +935,24 @@ namespace VirtualMirror
                             {
                                 GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             }
-                            GUILayout.HorizontalSlider(1, 1, 100);
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                GUILayout.HorizontalSlider(1, 1, 100);
+                            }
                         }
                     }
                     GUI.enabled = VirtualMirror.REARVIEW_Cam.activeSelf;
                     using (new GUILayout.HorizontalScope())
                     {
-                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                        VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView
+                            = float.Parse(GUILayout.TextField(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                        using (new GUILayout.VerticalScope())
+                        {
+                            GUILayout.Space(5);
+                            VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView
+                                = GUILayout.HorizontalSlider(VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                        }
                         _currentCar.RearviewCam.FieldOfView = VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().fieldOfView;
                     }
                     GUI.enabled = VirtualMirror.RIGHTSIDE_Cam.activeSelf;
@@ -918,8 +960,14 @@ namespace VirtualMirror
                     {
                         if (VirtualMirror.RIGHTSIDE_Cam.activeSelf)
                         {
-                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = float.Parse(GUILayout.TextField(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
-                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView = GUILayout.HorizontalSlider(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                            VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView
+                                = float.Parse(GUILayout.TextField(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView.ToString(), 4, GUILayout.MaxWidth(40)));
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView
+                                    = GUILayout.HorizontalSlider(VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView, 1, 100);
+                            }
                             _currentCar.RightCam.FieldOfView = VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().fieldOfView;
                         }
                         else
@@ -932,7 +980,11 @@ namespace VirtualMirror
                             {
                                 GUILayout.TextField("off", GUILayout.MaxWidth(40));
                             }
-                            GUILayout.HorizontalSlider(1, 1, 100);
+                            using (new GUILayout.VerticalScope())
+                            {
+                                GUILayout.Space(5);
+                                GUILayout.HorizontalSlider(1, 1, 100);
+                            }
                         }
                     }
                 }
@@ -946,34 +998,47 @@ namespace VirtualMirror
                 GUILayout.Label("Max draw distance", labelStyle);
                 using (new GUILayout.HorizontalScope())
                 {
-                    if (VirtualMirror.IsGuiLeftMirrorEnabled ||
-                        VirtualMirror.IsGuiRightMirrorEnabled ||
-                        VirtualMirror.IsGuiRearviewMirrorEnabled)
+                    if (VirtualMirror.LEFTSIDE_Cam.activeSelf ||
+                        VirtualMirror.RIGHTSIDE_Cam.activeSelf ||
+                        VirtualMirror.REARVIEW_Cam.activeSelf)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.FarClipPlane = int.Parse(GUILayout.TextField(VirtualMirror.Settings.FarClipPlane.ToString(), 4, GUILayout.MaxWidth(40)));
-                        VirtualMirror.Settings.FarClipPlane = (int)GUILayout.HorizontalSlider(VirtualMirror.Settings.FarClipPlane, 1, 2000);
+                        using (new GUILayout.VerticalScope())
+                        {
+                            GUILayout.Space(5);
+                            VirtualMirror.Settings.FarClipPlane = (int)GUILayout.HorizontalSlider(VirtualMirror.Settings.FarClipPlane, 1, 2000);
+                        }
                     }
                     else
                     {
                         GUI.enabled = false;
-                        GUILayout.TextField("off", GUILayout.MaxWidth(40));
-                        GUILayout.HorizontalSlider(1, 1, 10);
+                        if (VirtualMirror.LEFTSIDE_Mirror.activeSelf && !VirtualMirror.LEFTSIDE_Cam.activeSelf ||
+                            VirtualMirror.RIGHTSIDE_Mirror.activeSelf && !VirtualMirror.RIGHTSIDE_Cam.activeSelf)
+                        {
+                            GUILayout.TextField("stock", GUILayout.MaxWidth(40));
+                        }
+                        else
+                        {
+                            GUILayout.TextField("off", GUILayout.MaxWidth(40));
+                        }
+                        using (new GUILayout.VerticalScope())
+                        {
+                            GUILayout.Space(5);
+                            GUILayout.HorizontalSlider(1, 1, 10);
+                        }
                     }
-                    if (VirtualMirror.IsGuiLeftMirrorEnabled)
                         VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    if (VirtualMirror.IsGuiRearviewMirrorEnabled)
                         VirtualMirror.REARVIEW_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
-                    if (VirtualMirror.IsGuiRightMirrorEnabled)
                         VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().farClipPlane = VirtualMirror.Settings.FarClipPlane;
                 }
 
                 GUI.enabled = true;
                 GUILayout.Label("Side mirror resolution", labelStyle);
-                using (new GUILayout.HorizontalScope())
+                using (new GUILayout.HorizontalScope("box"))
                 {
-                    if (VirtualMirror.IsGuiLeftMirrorEnabled &&
-                        VirtualMirror.IsGuiRightMirrorEnabled)
+                    if (VirtualMirror.LEFTSIDE_Cam.activeSelf ||
+                        VirtualMirror.RIGHTSIDE_Cam.activeSelf)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.SideMirrorsSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
@@ -997,35 +1062,49 @@ namespace VirtualMirror
                             {
                                 width = 512;
                             }
+
                             VirtualMirror.Settings.SideMirrorsRenderTextureWidth = VirtualMirror.Settings.SideMirrorsRenderTextureHeight = width;
-                            VirtualMirror.LeftRenderTexture =
-                                new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                            VirtualMirror.RightRenderTexture =
-                                new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
-                            if (VirtualMirror.IsGuiLeftMirrorEnabled)
+                            if (VirtualMirror.IsLeftCamUsed)
                             {
+                                VirtualMirror.LeftRenderTexture =
+                                    new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
                                 VirtualMirror.LEFTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.LeftRenderTexture;
                                 VirtualMirror.LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.LeftRenderTexture;
                             }
-                            if (VirtualMirror.IsGuiRightMirrorEnabled)
+                            if (VirtualMirror.IsRightCamUsed)
                             {
+                                VirtualMirror.RightRenderTexture =
+                                    new RenderTexture(VirtualMirror.Settings.SideMirrorsRenderTextureWidth, VirtualMirror.Settings.SideMirrorsRenderTextureHeight, VirtualMirror.Settings.RenderTextureDepth);
                                 VirtualMirror.RIGHTSIDE_Cam.GetComponent<Camera>().targetTexture = VirtualMirror.RightRenderTexture;
                                 VirtualMirror.RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = VirtualMirror.RightRenderTexture;
                             }
                         }
                     }
-                    else
+                    else                                                                                                                                                                                                                                                                            
                     {
                         GUI.enabled = false;
-                        GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
+                        if (VirtualMirror.LEFTSIDE_Mirror.activeSelf && !VirtualMirror.LEFTSIDE_Cam.activeSelf ||
+                            VirtualMirror.RIGHTSIDE_Mirror.activeSelf && !VirtualMirror.RIGHTSIDE_Cam.activeSelf)
+                        {
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                GUILayout.FlexibleSpace();
+                                GUILayout.Label("stock");
+                                GUILayout.FlexibleSpace();
+                            }
+                        }
+                        else
+                        {
+                            GUILayout.SelectionGrid(VirtualMirror.Settings.SideMirrorsSelectionGrid, _sideResolutionText, 4);
+                        }
                     }
                 }
 
                 GUI.enabled = true;
                 GUILayout.Label("Rearview mirror resolution", labelStyle);
-                using (var scope = new GUILayout.HorizontalScope())
+                using (new GUILayout.HorizontalScope("box"))
                 {
-                    if (VirtualMirror.IsGuiRearviewMirrorEnabled)
+                    if (VirtualMirror.REARVIEW_Cam.activeSelf)
                     {
                         GUI.enabled = true;
                         VirtualMirror.Settings.RearviewMirrorSelectionGrid = GUILayout.SelectionGrid(VirtualMirror.Settings.RearviewMirrorSelectionGrid, _rearviewResolutionText, 4);

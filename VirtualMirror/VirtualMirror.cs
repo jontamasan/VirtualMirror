@@ -44,6 +44,8 @@ namespace VirtualMirror
         public static bool IsGuiLeftMirrorEnabled;
         public static bool IsGuiRightMirrorEnabled;
         public static bool IsGuiRearviewMirrorEnabled;
+        public static bool IsRightCamUsed;
+        public static bool IsLeftCamUsed;
 
         public static Settings Settings;
         public static Cars CurrentCar;
@@ -415,6 +417,7 @@ namespace VirtualMirror
                     case GIFU:
                     case VAN:
                         right_mirror.SetActive(true);
+                        IsRightCamUsed = false;
                         break;
                     case SATSUMA:
                     case MUSCLE:
@@ -423,6 +426,7 @@ namespace VirtualMirror
                     case MOPED:
                         right_cam.SetActive(true);
                         right_mirror.SetActive(true);
+                        IsRightCamUsed = true;
                         break;
                 }
                 IsGuiRightMirrorEnabled = true;
@@ -459,12 +463,14 @@ namespace VirtualMirror
                     case MUSCLE:
                     case SATSUMA:
                         left_mirror.SetActive(true);
+                        IsLeftCamUsed = false;
                         break;
                     case KEKMET:
                     case RUSCKO:
                     case MOPED:
                         left_cam.SetActive(true);
                         left_mirror.SetActive(true);
+                        IsLeftCamUsed = true;
                         break;
                 }
                 IsGuiLeftMirrorEnabled = true;
@@ -501,6 +507,8 @@ namespace VirtualMirror
             IsGuiLeftMirrorEnabled = false;
             IsGuiRightMirrorEnabled = false;
             IsGuiRearviewMirrorEnabled = false;
+            IsRightCamUsed = false;
+            IsLeftCamUsed = false;
         }
 
         private bool Initialize()
