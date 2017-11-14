@@ -50,7 +50,7 @@ namespace VirtualMirror
 
         // private valiables
         private const String SETTINGS_FILE_NAME = "settings.xml";
-        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2) + 100, 500, 450);
+        private Rect _defaultGUIWindowRect = new Rect((Screen.width / 2) - (500 / 2), (Screen.height / 2) - (500 / 2) + 50, 500, 450);
         private Rect _GUIWindowRect;
         private GameObject _player;
         private bool _isInit = true;
