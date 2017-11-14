@@ -22,7 +22,7 @@ namespace VirtualMirror
         public override bool UseAssetsFolder => false;
 
         public Keybind virtualMirrorKey = new Keybind("virtualMirror", "Virtual Mirror", KeyCode.F10);
-        public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F12, KeyCode.LeftControl);
+        public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F10, KeyCode.LeftControl);
 
         // public valiables
         public static GameObject RIGHTSIDE_Cam;
@@ -147,6 +147,15 @@ namespace VirtualMirror
             var cars = FsmVariables.GlobalVariables.FindFsmString("PlayerCurrentVehicle").Value;
             if (toggleMenuKey.IsDown() && cars.Length != 0)
             {
+                if (toggleMenuKey.Key == virtualMirrorKey.Key)
+                {
+                    if (virtualMirrorKey.Modifier != KeyCode.None &&
+                    Input.GetKey(virtualMirrorKey.Modifier))
+                    {
+                        goto RESUEM;
+                    }
+                }
+
                 if (IsGuiActive)
                 {
                     IsGuiActive = false;
@@ -158,6 +167,7 @@ namespace VirtualMirror
                     IsPlayerInMenu.Value = true;
                 }
             }
+            RESUEM:
 
             // activate once if player is boarded a car
             if (cars.Length != 0 && _isPlayerBoarded ||
@@ -168,7 +178,7 @@ namespace VirtualMirror
                 {
                     case GIFU:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj_name).transform,
@@ -180,7 +190,7 @@ namespace VirtualMirror
                         break;
                     case VAN:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: REARVIEW_Cam,
                             parent: GameObject.Find(car_obj_name).transform,
@@ -192,7 +202,7 @@ namespace VirtualMirror
                         break;
                     case SATSUMA:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj_name + "/Body/pivot_door_right/door right(Clone)").transform,
@@ -209,7 +219,7 @@ namespace VirtualMirror
                         break;
                     case MUSCLE:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj_name + "/DriverDoors/door(right)").transform,
@@ -226,7 +236,7 @@ namespace VirtualMirror
                         break;
                     case KEKMET:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj_name + "/DriverDoors 1/doorr/door(right)").transform,
@@ -248,7 +258,7 @@ namespace VirtualMirror
                         break;
                     case RUSCKO:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj_name + "/DriverDoors/doorr").transform,
@@ -270,7 +280,7 @@ namespace VirtualMirror
                         break;
                     case MOPED:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey, toggleMenuKey);
                         SetCameraPositon(
                             camera: RIGHTSIDE_Cam,
                             parent: GameObject.Find(car_obj_name + "/LOD/Suspension").transform,
@@ -331,10 +341,19 @@ namespace VirtualMirror
             }
         }
 
-        private static void SwitchMirrorsNum(Cars car_list, Keybind virtualMirrorKey)
+        private static void SwitchMirrorsNum(Cars car_list, Keybind virtualMirrorKey, Keybind toggleMenuKey)
         {
             if (virtualMirrorKey.IsDown())
             {
+                if (toggleMenuKey.Key == virtualMirrorKey.Key)
+                {
+                    if (toggleMenuKey.Modifier != KeyCode.None &&
+                    Input.GetKey(toggleMenuKey.Modifier))
+                    {
+                        return;
+                    }
+                }
+
                 car_list.SwitchMirrorsNum++;
                 if (car_list.SwitchMirrorsNum > ((int)MirrorsNum.Right + (int)MirrorsNum.Center + (int)MirrorsNum.Left))
                 {
