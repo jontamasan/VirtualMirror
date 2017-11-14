@@ -63,7 +63,7 @@ namespace VirtualMirror
         private const String MUSCLE = "Ferndale";
         private const String KEKMET = "Kekmet";
         private const String BOAT = "Boat";
-        private const String MOPED = "Jonnez ES";
+        private const String MOPED = "Jonnez";
         private const String RUSCKO = "Ruscko";
 
         // car object names using with GameObject.Find
@@ -96,7 +96,7 @@ namespace VirtualMirror
             Keybind.Add(this, virtualMirrorKey);
             Keybind.Add(this, toggleMenuKey);
 
-            Settings = CreateData(Version);
+            Settings = CreateData(this.Version);
             _GUIWindowRect = _defaultGUIWindowRect;
             // load settings from file.
             if (File.Exists(Path.Combine(ModLoader.GetModConfigFolder(this), SETTINGS_FILE_NAME)))
@@ -207,6 +207,23 @@ namespace VirtualMirror
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
                         SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
                         break;
+                    case MUSCLE:
+                        CurrentCar = Settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SetCameraPositon(
+                            camera: RIGHTSIDE_Cam,
+                            parent: GameObject.Find(car_obj_name + "/DriverDoors/door(right)").transform,
+                            cam_settings: CurrentCar.RightCam
+                            );
+                        SetCameraPositon(
+                            camera: REARVIEW_Cam,
+                            parent: GameObject.Find(car_obj_name).transform,
+                            cam_settings: CurrentCar.RearviewCam
+                            );
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
+                        break;
                     case KEKMET:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
                         SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
@@ -228,27 +245,6 @@ namespace VirtualMirror
                         RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = LeftRenderTexture;
                         SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
-                        break;
-                    case MUSCLE:
-                        CurrentCar = Settings.Cars.Find(x => x.Name == cars);
-                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
-                        SetCameraPositon(
-                            camera: RIGHTSIDE_Cam,
-                            parent: GameObject.Find(car_obj_name + "/DriverDoors/door(right)").transform,
-                            cam_settings: CurrentCar.RightCam
-                            );
-                        SetCameraPositon(
-                            camera: REARVIEW_Cam,
-                            parent: GameObject.Find(car_obj_name).transform,
-                            cam_settings: CurrentCar.RearviewCam
-                            );
-                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
-                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = GameObject.Find("LeftSideMirrorCam").GetComponent<Camera>().targetTexture;
-                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam);
-                        break;
-                    case BOAT:
-                        break;
-                    case MOPED:
                         break;
                     case RUSCKO:
                         CurrentCar = Settings.Cars.Find(x => x.Name == cars);
@@ -272,7 +268,32 @@ namespace VirtualMirror
                         LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = LeftRenderTexture;
                         SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
+                    case MOPED:
+                        CurrentCar = Settings.Cars.Find(x => x.Name == cars);
+                        SwitchMirrorsNum(CurrentCar, virtualMirrorKey);
+                        SetCameraPositon(
+                            camera: RIGHTSIDE_Cam,
+                            parent: GameObject.Find(car_obj_name + "/LOD/Suspension").transform,
+                            cam_settings: CurrentCar.RightCam
+                            );
+                        SetCameraPositon(
+                            camera: REARVIEW_Cam,
+                            parent: GameObject.Find(car_obj_name).transform,
+                            cam_settings: CurrentCar.RearviewCam
+                            );
+                        SetCameraPositon(
+                            camera: LEFTSIDE_Cam,
+                            parent: GameObject.Find(car_obj_name + "/LOD/Suspension").transform,
+                            cam_settings: CurrentCar.LeftCam
+                            );
+                        RIGHTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = RightRenderTexture;
+                        LEFTSIDE_Mirror.GetComponent<MeshRenderer>().material.mainTexture = LeftRenderTexture;
+                        SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
+                        break;
+                    case BOAT:
+                        break;
                     default:
+                        ModConsole.Error(string.Format("\n{0}: An unknown vehicle was detected. Please let me know (Author: {1}) :o\nVehicle name: {2}", this.Name, this.Author, cars ));
 #if DEBUG
                         foreach (var fsm in GameObject.Find("PLAYER").GetComponents<PlayMakerFSM>())
                         {
@@ -298,10 +319,10 @@ namespace VirtualMirror
 
                 using (FileStream fs = new FileStream(Path.Combine(ModLoader.GetModConfigFolder(this), SETTINGS_FILE_NAME), FileMode.Create))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(Settings));
-                    XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
-                    ns.Add(String.Empty, String.Empty);
-                    serializer.Serialize(fs, Settings, ns);
+                        XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+                        XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                        ns.Add(String.Empty, String.Empty);
+                        serializer.Serialize(fs, Settings, ns);
                 }
 
                 IsGuiActive = false;
@@ -380,6 +401,7 @@ namespace VirtualMirror
                     case MUSCLE:
                     case KEKMET:
                     case RUSCKO:
+                    case MOPED:
                         right_cam.SetActive(true);
                         right_mirror.SetActive(true);
                         break;
@@ -398,6 +420,7 @@ namespace VirtualMirror
                     case SATSUMA:
                     case KEKMET:
                     case RUSCKO:
+                    case MOPED:
                         right_cam.SetActive(false);
                         right_mirror.SetActive(false);
                         break;
@@ -420,6 +443,7 @@ namespace VirtualMirror
                         break;
                     case KEKMET:
                     case RUSCKO:
+                    case MOPED:
                         left_cam.SetActive(true);
                         left_mirror.SetActive(true);
                         break;
@@ -438,6 +462,7 @@ namespace VirtualMirror
                         break;
                     case KEKMET:
                     case RUSCKO:
+                    case MOPED:
                         left_cam.SetActive(false);
                         left_mirror.SetActive(false);
                         break;
@@ -720,6 +745,27 @@ namespace VirtualMirror
 
             this_car = new Cars
             {
+                Name = MUSCLE,
+                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                RightCam = new Cam
+                {
+                    LocalPosition = new Vector3(0.2f, 0.1f, 0.4f),
+                    LocalEulerAngles = new Vector3(182, 90, 90),
+                    NearClipPlane = 0.2f,
+                    FieldOfView = 30
+                },
+                RearviewCam = new Cam
+                {
+                    LocalPosition = new Vector3(0, 1f, 0.3f),
+                    LocalEulerAngles = new Vector3(0, 180),
+                    NearClipPlane = 2.5f,
+                    FieldOfView = 10
+                }
+            };
+            settings.Cars.Add(this_car);
+
+            this_car = new Cars
+            {
                 Name = KEKMET,
                 SwitchMirrorsNum = (int)MirrorsNum.Right,
                 RightCam = new Cam
@@ -742,27 +788,6 @@ namespace VirtualMirror
                     LocalEulerAngles = new Vector3(180, 75, 90), // y,x,z
                     NearClipPlane = 0.2f,
                     FieldOfView = 30
-                }
-            };
-            settings.Cars.Add(this_car);
-
-            this_car = new Cars
-            {
-                Name = MUSCLE,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
-                RightCam = new Cam
-                {
-                    LocalPosition = new Vector3(0.2f, 0.1f, 0.4f),
-                    LocalEulerAngles = new Vector3(182, 90, 90),
-                    NearClipPlane = 0.2f,
-                    FieldOfView = 30
-                },
-                RearviewCam = new Cam
-                {
-                    LocalPosition = new Vector3(0, 1f, 0.3f),
-                    LocalEulerAngles = new Vector3(0, 180),
-                    NearClipPlane = 2.5f,
-                    FieldOfView = 10
                 }
             };
             settings.Cars.Add(this_car);
@@ -794,6 +819,35 @@ namespace VirtualMirror
                 }
             };
             settings.Cars.Add(this_car);
+
+            this_car = new Cars
+            {
+                Name = MOPED,
+                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                RightCam = new Cam
+                {
+                    LocalPosition = new Vector3(0.8f, 0.15f, 0.65f),
+                    LocalEulerAngles = new Vector3(-10, 260, 265),
+                    NearClipPlane = 0.2f,
+                    FieldOfView = 30
+                },
+                RearviewCam = new Cam
+                {
+                    LocalPosition = new Vector3(0, 0.8f, 0),
+                    LocalEulerAngles = new Vector3(0, 180, 0),
+                    NearClipPlane = 2.3f,
+                    FieldOfView = 20
+                },
+                LeftCam = new Cam
+                {
+                    LocalPosition = new Vector3(0.8f, -0.15f, 0.65f), // z,x,y
+                    LocalEulerAngles = new Vector3(10, 260, 265), // ,,y
+                    NearClipPlane = 0.2f,
+                    FieldOfView = 30
+                }
+            };
+            settings.Cars.Add(this_car);
+
             return settings;
         }
     }
