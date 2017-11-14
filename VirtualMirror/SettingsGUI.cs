@@ -16,7 +16,7 @@ namespace VirtualMirror
         private Vector2 _positionHorizontalFactor = new Vector2(0.05f, 0);
         private static int _prevSelectedSide = VirtualMirror.Settings.SideMirrorsSelectionGrid;
         private static int _prevSelectedRear = VirtualMirror.Settings.RearviewMirrorSelectionGrid;
-        private string _textRelativePosition = "Linked Left-Right";
+        private string _textRelativePosition = "Linking Left-Right";
         private string _textPreserveAspectRatio = "fixed aspect ratio";
         private string[] _sideResolutionText = { "64", "128", "256", "512" };
         private string[] _rearviewResolutionText = { "64*256", "128*512", "256*1024", "512*2048" };
