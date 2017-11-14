@@ -542,18 +542,18 @@ namespace VirtualMirror
                 REARVIEW_Cam = CreateVitualMirrorCam("REARVIEW_Cam", RearviewRenderTexture, Settings.FarClipPlane);
 
                 // virtual mirror setting
-                DefaultSideVirtualMirrorsScale = new Vector2(6, 4);
+                DefaultSideVirtualMirrorsScale = new Vector2(5, 3);
                 DefaultRearVirtualMirrorScale = new Vector2(10, 3);
                 Settings.LeftVirtualMirrorScale = DefaultSideVirtualMirrorsScale;
                 Settings.RearVirtualMirrorScale = DefaultRearVirtualMirrorScale;
                 Settings.RightVirtualMirrorScale = DefaultSideVirtualMirrorsScale;
-                DefaultRearVirtualMirrorPosition = new Vector2(0, 8.8f); // Rearview mirror is not dependence by resolution
+                DefaultRearVirtualMirrorPosition = new Vector2(0, 9); // Rearview mirror is not dependence by resolution
                 Settings.RearVirtualMirrorPosition = DefaultRearVirtualMirrorPosition;
                 float res = (float)Screen.width / (float)Screen.height;
                 if (Math.Abs(res - (16f / 9f)) < 0.1f)
                 {
-                    DefaultLeftVirtualMirrorPosition = new Vector2(-14.5f, 8.3f);
-                    DefaultRightVirtualMirrorPosition = new Vector2(14.5f, 8.3f);
+                    DefaultLeftVirtualMirrorPosition = new Vector2(-15.2f, 9);
+                    DefaultRightVirtualMirrorPosition = new Vector2(15.2f, 9);
                     if (Settings.ScreenResolution != res)
                     {
                         Settings.ScreenResolution = res;
@@ -564,8 +564,8 @@ namespace VirtualMirror
                 }
                 else if (Math.Abs(res - (16f / 10f)) < 0.1f)
                 {
-                    DefaultLeftVirtualMirrorPosition = new Vector2(-12.8f, 8.3f);
-                    DefaultRightVirtualMirrorPosition = new Vector2(12.8f, 8.3f);
+                    DefaultLeftVirtualMirrorPosition = new Vector2(-13.5f, 9);
+                    DefaultRightVirtualMirrorPosition = new Vector2(13.5f, 9);
                     if (Settings.ScreenResolution != res)
                     {
                         Settings.ScreenResolution = res;
@@ -575,8 +575,8 @@ namespace VirtualMirror
                 }
                 else if (Math.Abs(res - (4f / 3f)) < 0.1f)
                 {
-                    DefaultLeftVirtualMirrorPosition = new Vector2(-9.25f, 8.3f);
-                    DefaultRightVirtualMirrorPosition = new Vector2(9.25f, 8.3f);
+                    DefaultLeftVirtualMirrorPosition = new Vector2(-10.8f, 9);
+                    DefaultRightVirtualMirrorPosition = new Vector2(10.8f, 9);
                     if (Settings.ScreenResolution != res)
                     {
                         Settings.ScreenResolution = res;
@@ -587,8 +587,8 @@ namespace VirtualMirror
                 else if (Math.Abs(res - (3f / 2f)) < 0.1f)
                 {
                     // eg: 720*480
-                    DefaultLeftVirtualMirrorPosition = new Vector2(-11.75f, 8.3f);
-                    DefaultRightVirtualMirrorPosition = new Vector2(11.75f, 8.3f);
+                    DefaultLeftVirtualMirrorPosition = new Vector2(-12.4f, 9);
+                    DefaultRightVirtualMirrorPosition = new Vector2(12.4f, 9);
                     if (Settings.ScreenResolution != res)
                     {
                         Settings.ScreenResolution = res;
@@ -606,8 +606,8 @@ namespace VirtualMirror
                         RIGHTSIDE_Mirror.transform.localPosition -= new Vector3(0.05f, 0);
                         view_point = Camera.main.WorldToViewportPoint(RIGHTSIDE_Mirror.transform.position);
                     }*/
-                    DefaultLeftVirtualMirrorPosition = new Vector2(10, 8.3f);
-                    DefaultRightVirtualMirrorPosition = new Vector2(-10, 8.3f);
+                    DefaultLeftVirtualMirrorPosition = new Vector2(10, 9);
+                    DefaultRightVirtualMirrorPosition = new Vector2(-10, 9);
                     if (Settings.ScreenResolution != res)
                     {
                         Settings.ScreenResolution = res;
