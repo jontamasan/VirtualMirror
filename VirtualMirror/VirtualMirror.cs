@@ -43,10 +43,7 @@ namespace VirtualMirror
         public static bool IsGuiActive;
         public static bool IsGuiLeftMirrorEnabled;
         public static bool IsGuiRightMirrorEnabled;
-        public static bool IsGuiLeftCameraEnabled;
-        public static bool IsGuiRightCameraEnabled;
         public static bool IsGuiRearviewMirrorEnabled;
-        public static bool IsGuiRearviewCameraEnabled;
 
         public static Settings Settings;
         public static Cars CurrentCar;
@@ -360,14 +357,12 @@ namespace VirtualMirror
                 rearview_cam.SetActive(true);
                 rearview_mirror.SetActive(true);
                 IsGuiRearviewMirrorEnabled = true;
-                IsGuiRearviewCameraEnabled = true;
             }
             else
             {
                 rearview_cam.SetActive(false);
                 rearview_mirror.SetActive(false);
                 IsGuiRearviewMirrorEnabled = false;
-                IsGuiRearviewCameraEnabled = false;
             }
             // rightside
             if (currentCar.SwitchMirrorsNum == (int)MirrorsNum.Right ||
@@ -389,12 +384,7 @@ namespace VirtualMirror
                         right_mirror.SetActive(true);
                         break;
                 }
-                //IsGuiRightMirrorEnabled = true;
-                //if (right_cam != null)
-                //{
-                //    right_cam.SetActive(true);
-                //    IsGuiRightCameraEnabled = true;
-                //}
+                IsGuiRightMirrorEnabled = true;
             }
             else
             {
@@ -412,13 +402,7 @@ namespace VirtualMirror
                         right_mirror.SetActive(false);
                         break;
                 }
-                //right_mirror.SetActive(false);
-                //IsGuiRightMirrorEnabled = false;
-                //if (right_cam != null)
-                //{
-                //    right_cam.SetActive(false);
-                //    IsGuiRightCameraEnabled = false;
-                //}
+                IsGuiRightMirrorEnabled = false;
             }
             // leftside
             if (currentCar.SwitchMirrorsNum == (int)MirrorsNum.Left ||
@@ -440,13 +424,7 @@ namespace VirtualMirror
                         left_mirror.SetActive(true);
                         break;
                 }
-                //left_mirror.SetActive(true);
-                //IsGuiLeftMirrorEnabled = true;
-                //if (left_cam != null)
-                //{
-                //    left_cam.SetActive(true);
-                //    IsGuiLeftCameraEnabled = true;
-                //}
+                IsGuiLeftMirrorEnabled = true;
             }
             else
             {
@@ -464,13 +442,7 @@ namespace VirtualMirror
                         left_mirror.SetActive(false);
                         break;
                 }
-                //left_mirror.SetActive(false);
-                //IsGuiLeftMirrorEnabled = false;
-                //if (left_cam != null)
-                //{
-                //    left_cam.SetActive(false);
-                //    IsGuiLeftCameraEnabled = false;
-                //}
+                IsGuiLeftMirrorEnabled = false;
             }
         }
 
