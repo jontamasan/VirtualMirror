@@ -10,7 +10,7 @@ namespace VirtualMirror
 {
     public class VirtualMirror : Mod
     {
-        public const string VERSION = "0.1";
+        public const string VERSION = "0.2";
 
         public override string ID => "VirtualMirror";
         public override string Name => "VirtualMirror";
