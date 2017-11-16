@@ -25,14 +25,14 @@ namespace VirtualMirror
         public Keybind toggleMenuKey = new Keybind("toggleMenu", "Toggle Menu", KeyCode.F10, KeyCode.LeftControl);
 
         // public valiables
-        public static GameObject RIGHTSIDE_Cam;
-        public static GameObject REARVIEW_Cam;
         public static GameObject LEFTSIDE_Cam;
-        public static GameObject RIGHTSIDE_Mirror;
-        public static GameObject REARVIEW_Mirror;
+        public static GameObject REARVIEW_Cam;
+        public static GameObject RIGHTSIDE_Cam;
         public static GameObject LEFTSIDE_Mirror;
-        public static RenderTexture RightRenderTexture;
+        public static GameObject REARVIEW_Mirror;
+        public static GameObject RIGHTSIDE_Mirror;
         public static RenderTexture LeftRenderTexture;
+        public static RenderTexture RightRenderTexture;
         public static RenderTexture RearviewRenderTexture;
         public static Vector2 DefaultRearVirtualMirrorScale;
         public static Vector2 DefaultSideVirtualMirrorsScale;
@@ -41,14 +41,14 @@ namespace VirtualMirror
         public static Vector2 DefaultRightVirtualMirrorPosition;
         public static FsmBool IsPlayerInMenu;
         public static bool IsGuiActive;
+        public static bool IsLeftCamUsed;
+        public static bool IsRightCamUsed;
         public static bool IsGuiLeftMirrorEnabled;
         public static bool IsGuiRightMirrorEnabled;
         public static bool IsGuiRearviewMirrorEnabled;
-        public static bool IsRightCamUsed;
-        public static bool IsLeftCamUsed;
 
-        public static Settings Settings;
         public static Cars CurrentCar;
+        public static Settings Settings;
 
         // private valiables
         private const String SETTINGS_FILE_NAME = "settings.xml";
@@ -59,14 +59,16 @@ namespace VirtualMirror
         private bool _isPlayerBoarded = true;
         
         // car names using with GlobalVariables.FindFsmString("PlayerCurrentVehicle") returned value
-        private const String GIFU = "Gifu";
+        private const String BUS = "Bus";
         private const String VAN = "Hayosiko";
-        private const String SATSUMA = "Satsuma";
-        private const String MUSCLE = "Ferndale";
-        private const String KEKMET = "Kekmet";
+        private const String GIFU = "Gifu";
         private const String BOAT = "Boat";
         private const String MOPED = "Jonnez";
+        private const String KEKMET = "Kekmet";
+        private const String MUSCLE = "Ferndale";
         private const String RUSCKO = "Ruscko";
+        private const String SATSUMA = "Satsuma";
+        private const String GREENCAR = "Fittan";
 
         // car object names using with GameObject.Find
         //private const String OBJ_GIFU = "GIFU(750/450psi)";
@@ -303,6 +305,8 @@ namespace VirtualMirror
                         SetActive(CurrentCar, REARVIEW_Mirror, RIGHTSIDE_Mirror, LEFTSIDE_Mirror, REARVIEW_Cam, RIGHTSIDE_Cam, LEFTSIDE_Cam);
                         break;
                     case BOAT:
+                    case BUS:
+                    case GREENCAR:
                         break;
                     default:
                         ModConsole.Error(string.Format("\n{0}: An unknown vehicle was detected. Please let me know (Author: {1}) :o\nVehicle name: {2}", this.Name, this.Author, cars ));
@@ -724,7 +728,7 @@ namespace VirtualMirror
             Cars this_car = new Cars
             {
                 Name = GIFU,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RearviewCam = new Cam
                 {
                     LocalPosition = new Vector3(0, 2.2f, 0f),
@@ -738,7 +742,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = VAN,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RearviewCam = new Cam
                 {
                     LocalPosition = new Vector3(0, 1.3f, 1.4f),
@@ -752,7 +756,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = SATSUMA,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(-0.1f, 0.0f, 0.2f),  // -x,z,y
@@ -773,7 +777,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = MUSCLE,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(0.2f, 0.1f, 0.4f),
@@ -794,7 +798,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = KEKMET,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(0.1f, 0.6f, 0.2f), // z,x,y
@@ -822,7 +826,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = RUSCKO,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(0.5f, 0, 0.5f),
@@ -850,7 +854,7 @@ namespace VirtualMirror
             this_car = new Cars
             {
                 Name = MOPED,
-                SwitchMirrorsNum = (int)MirrorsNum.Right,
+                SwitchMirrorsNum = (int)MirrorsNum.None,
                 RightCam = new Cam
                 {
                     LocalPosition = new Vector3(0.8f, 0.15f, 0.65f),
